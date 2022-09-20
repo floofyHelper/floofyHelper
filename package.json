@@ -1,8 +1,8 @@
 {
-	"name": "floofy-helper",
-	"version": "0.1.7",
-	"description": "General-purpose bot made for Floofy Den",
-	"main": "src/app/index.js",
+	"name": "floofyhelper",
+	"version": "0.0.1",
+	"description": "General-purpose & moderation bot with ✨polish✨. Designed to make management and moderation easy.",
+	"main": "src/app/initial.js",
 	"type": "module",
 	"scripts": {
 		"start": "node .",
@@ -13,15 +13,18 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Acestriker/floofyHelper.git"
+		"url": "https://github.com/floofyHelper/floofyHelper"
 	},
 	"keywords": [
-		"Discord"
+		"Discord",
+		"Nodejs",
+		"Sapphire-Framework"
 	],
 	"author": "Acestriker",
-	"license": "Apache-2.0",
+	"license": "AGPL-3.0",
 	"bugs": {
-		"url": "https://acestriker.carrd.co/"
+		"url": "https://github.com/floofyHelper/floofyHelper/issues",
+		"email": "acestriker0001@icloud.com"
 	},
 	"eslintConfig": {
 		"env": {
