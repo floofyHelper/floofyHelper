@@ -1,7 +1,21 @@
 {
 	"name": "floofyhelper",
 	"version": "0.0.1",
+	"author": "Acestriker",
+	"license": "AGPL-3.0",
 	"description": "General-purpose & moderation bot with ✨polish✨. Designed to make management and moderation easy.",
+	"keywords": [
+		"Discord",
+		"Nodejs",
+		"Sapphire-Framework"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/floofyHelper/floofyHelper"
+	},
+	"bugs": {
+		"url": "https://github.com/floofyHelper/floofyHelper/issues"
+	},
 	"main": "src/app/initial.js",
 	"type": "module",
 	"scripts": {
@@ -10,20 +24,6 @@
 		"depcheck": "npx depcheck",
 		"test": "mocha",
 		"prepare": "husky install"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/floofyHelper/floofyHelper"
-	},
-	"keywords": [
-		"Discord",
-		"Nodejs",
-		"Sapphire-Framework"
-	],
-	"author": "Acestriker",
-	"license": "AGPL-3.0",
-	"bugs": {
-		"url": "https://github.com/floofyHelper/floofyHelper/issues"
 	},
 	"eslintConfig": {
 		"env": {
