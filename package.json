@@ -1,0 +1,49 @@
+{
+  "name": "floofy-helper",
+  "version": "0.1.7",
+  "description": "General-purpose bot made for Floofy Den",
+  "main": ".src/app/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node .",
+    "lint": "eslint .",
+    "depcheck": "npx depcheck",
+    "test": "mocha",
+    "dotenv push": "dotenv push"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Acestriker/floofyHelper.git"
+  },
+  "keywords": [
+    "Discord"
+  ],
+  "author": "Acestriker",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://acestriker.carrd.co/"
+  },
+  "dependencies": {
+    "@sapphire/framework": "^3.1.1",
+    "chalk": "^5.0.1",
+    "cronitor": "^2.3.2",
+    "discord.js": "^13.11.0",
+    "dotenv": "^16.0.1",
+    "js-yaml": "^4.1.0",
+    "nsfwjs": "^2.4.1",
+    "stop-discord-phishing": "^0.3.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.38.0",
+    "eslint": "^8.23.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.5",
+    "eslint-plugin-promise": "^6.0.1",
+    "eslint-plugin-react": "^7.31.8",
+    "mocha": "^10.0.0",
+    "prettier": "2.7.1",
+    "typescript": "^4.8.3"
+  }
+}

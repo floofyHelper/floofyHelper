@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "dotenv.dotenv-vscode",
+    "dbaeumer.vscode-eslint",
+    "DavidAnson.vscode-markdownlint",
+    "redhat.vscode-yaml"
+  ]
+}
