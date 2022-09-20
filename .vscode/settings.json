@@ -7,5 +7,6 @@
     "editor.formatOnSave": true,
     "prettier.configPath": "src/config/dev/.prettierrc.json",
 
-    "eslint.options": { "overrideConfigFile": "./src/config/dev/.eslintrc.yml" }
+    // ESLint settings
+    "eslint.options": { "overrideConfigFile": "src/config/dev/.eslintrc.yml" }
 }
