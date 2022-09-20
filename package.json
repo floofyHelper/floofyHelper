@@ -42,7 +42,7 @@
 	"prettier": {
 		"trailingComma": "es5",
 		"tabWidth": 4,
-		"semi": false,
+		"semi": true,
 		"singleQuote": true,
 		"endOfLine": "auto",
 		"useTabs": true
@@ -69,7 +69,6 @@
 		"eslint-plugin-import": "^2.26.0",
 		"eslint-plugin-n": "^15.2.5",
 		"eslint-plugin-promise": "^6.0.1",
-		"eslint-plugin-react": "^7.31.8",
 		"husky": "^8.0.1",
 		"lint-staged": "^13.0.3",
 		"mocha": "^10.0.0",
