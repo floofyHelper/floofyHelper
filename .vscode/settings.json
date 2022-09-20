@@ -1,8 +1,8 @@
 {
-    // Dotenv settings
-    "dotenv.enableAutocloaking": true,
+	// Dotenv settings
+	"dotenv.enableAutocloaking": true,
 
-    // Prettier settings
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
+	// Prettier settings
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.formatOnSave": true
 }
