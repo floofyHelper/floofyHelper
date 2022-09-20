@@ -1,4 +1,12 @@
+node_modules
+.DS_Store
 
+# .env Files
 .env*
+.env
+.env.me
 !.env.project
 !.env.vault
+
+# Linter plugin
+.eslintrc.json
