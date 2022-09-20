@@ -7,3 +7,4 @@ const client = new Sapphire.SapphireClient({
 })
 
 client.login(process.env.fdVerificationToken)
+console.log('ready')
