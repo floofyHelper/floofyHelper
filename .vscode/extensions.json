@@ -3,6 +3,7 @@
     "dotenv.dotenv-vscode",
     "dbaeumer.vscode-eslint",
     "DavidAnson.vscode-markdownlint",
-    "redhat.vscode-yaml"
+    "redhat.vscode-yaml",
+    "esbenp.prettier-vscode"
   ]
 }
