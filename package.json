@@ -23,8 +23,7 @@
 	"author": "Acestriker",
 	"license": "AGPL-3.0",
 	"bugs": {
-		"url": "https://github.com/floofyHelper/floofyHelper/issues",
-		"email": "acestriker0001@icloud.com"
+		"url": "https://github.com/floofyHelper/floofyHelper/issues"
 	},
 	"eslintConfig": {
 		"env": {
