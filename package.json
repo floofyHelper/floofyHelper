@@ -23,9 +23,6 @@
   "bugs": {
     "url": "https://acestriker.carrd.co/"
   },
-  "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
-  },
   "dependencies": {
     "@sapphire/framework": "^3.1.1",
     "chalk": "^5.0.1",
@@ -50,5 +47,9 @@
     "mocha": "^10.0.0",
     "prettier": "2.7.1",
     "typescript": "^4.8.3"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
   }
 }
