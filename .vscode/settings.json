@@ -1,9 +1,11 @@
 {
-  // Dotenv settings
-  "dotenv.enableAutocloaking": true,
+    // Dotenv settings
+    "dotenv.enableAutocloaking": true,
 
-  // Prettier settings
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "prettier.configPath": "src/config/dev/.prettierrc.json"
+    // Prettier settings
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "prettier.configPath": "src/config/dev/.prettierrc.json",
+
+    "eslint.options": { "overrideConfigFile": "./src/config/dev/.eslintrc.yml" }
 }
