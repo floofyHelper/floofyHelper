@@ -16,3 +16,28 @@
 </div>
 
 <https://google.github.io/styleguide/jsguide.html>
+
+
+### Dev Notes
+
+- Use `npx depcheck` to see unused dependencies
+- `./app/index` needs working
+
+#### Features to add
+
+Floofy Helper
+- NSFW Automod ( dependency installed [nsfwjs])
+- TempVC
+- XP System
+- Music Bot
+
+Floofy Helper+
+- Channel Stats
+- Github Updates
+- Inspiration Quotes
+- Tags
+
+
+#### What I last did cause i cant remember for shit
+- ✨something✨
+- 
