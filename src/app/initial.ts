@@ -4,20 +4,24 @@ import yaml from 'js-yaml' // .yaml File
 import * as dotenv from 'dotenv'
 dotenv.config() // .env File
 
-chalk.enabled = true
 chalk.level = 3 // Configuring Chalk
-// const client = yaml.load(fs.readFileSync('../config/config.yml')) // Import The config.yaml File
+const client = yaml.load(fs.readFileSync('../config/config.yml', 'utf8')) // Import The config.yaml File
 
-const timestamp = `${
+export const timestamp = `${
 	new Date().getMonth() + 1
 }-${new Date().getDate()}-${new Date().getFullYear()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
 
 // -------------------------------------------------------------------------------
 
-console.log(
-	chalk.white(timestamp),
-	chalk.underline.magenta('Startup'),
-	chalk.magenta()
-)
+if (client === 'stable') {
+	console.log(
+		chalk.underline.magenta('Startup'),
+		'Config file shows "stable", searching for all production bots'
+	)
+	const clientToken = process.env.floofyHelperToken
+	const clientID = process.env.floofyHelperClientID
+	const guildID = process.env.guildID
+	import('./fdVerification/index.js')
+}
 
-console.log('ready')
+import('./fdVerification/index.js')

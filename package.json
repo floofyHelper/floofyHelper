@@ -16,10 +16,12 @@
 	"bugs": {
 		"url": "https://github.com/floofyHelper/floofyHelper/issues"
 	},
+	"main": "src/build/initial.js",
 	"type": "module",
-	"main": "src/app/initial.ts",
 	"scripts": {
-		"start": "node .",
+		"start:build": "tsc -w",
+		"start:run": "nodemon build/app.js",
+		"start": "concurrently npm:start:*",
 		"lint": "eslint .",
 		"depcheck": "npx depcheck",
 		"test": "mocha",
@@ -39,6 +41,9 @@
 			"ecmaVersion": "latest",
 			"sourceType": "module"
 		},
+		"ignorePatterns": [
+			"src/build/*.js"
+		],
 		"rules": {}
 	},
 	"prettier": {
@@ -55,15 +60,18 @@
 	},
 	"dependencies": {
 		"@sapphire/framework": "^3.1.1",
-		"chalk": "^5.0.1",
+		"chalk": "^4.0.0",
+		"concurrently": "^7.4.0",
 		"cronitor": "^2.3.2",
 		"discord.js": "^13.11.0",
 		"dotenv": "^16.0.1",
 		"js-yaml": "^4.1.0",
+		"nodemon": "^2.0.20",
 		"nsfwjs": "^2.4.1",
 		"stop-discord-phishing": "^0.3.1"
 	},
 	"devDependencies": {
+		"@types/js-yaml": "^4.0.5",
 		"@typescript-eslint/eslint-plugin": "^5.38.0",
 		"eslint": "^8.23.1",
 		"eslint-config-prettier": "^8.5.0",
@@ -73,7 +81,6 @@
 		"eslint-plugin-promise": "^6.0.1",
 		"husky": "^8.0.1",
 		"lint-staged": "^13.0.3",
-		"mocha": "^10.0.0",
 		"prettier": "2.7.1",
 		"typescript": "^4.8.3"
 	}
