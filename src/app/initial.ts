@@ -13,15 +13,11 @@ export const timestamp = `${
 
 // -------------------------------------------------------------------------------
 
-if (client === 'stable') {
+/* if (client === 'stable') {
 	console.log(
 		chalk.underline.magenta('Startup'),
 		'Config file shows "stable", searching for all production bots'
 	)
-	const clientToken = process.env.floofyHelperToken
-	const clientID = process.env.floofyHelperClientID
-	const guildID = process.env.guildID
-	import('./fdVerification/index.js')
-}
+} */
 
 import('./fdVerification/index.js')
