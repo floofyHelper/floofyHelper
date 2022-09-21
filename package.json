@@ -16,8 +16,8 @@
 	"bugs": {
 		"url": "https://github.com/floofyHelper/floofyHelper/issues"
 	},
-	"main": "src/app/initial.js",
 	"type": "module",
+	"main": "src/app/initial.ts",
 	"scripts": {
 		"start": "node .",
 		"lint": "eslint .",
