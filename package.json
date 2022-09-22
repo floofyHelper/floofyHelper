@@ -24,7 +24,8 @@
 		"lint": "eslint .",
 		"depcheck": "npx depcheck",
 		"test": "mocha",
-		"prepare": "husky install"
+		"i": "husky install",
+		"install": "husky install"
 	},
 	"eslintConfig": {
 		"env": {
