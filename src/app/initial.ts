@@ -3,8 +3,7 @@ import inquirer from 'inquirer'
 import fs from 'node:fs' // File System
 import yaml from 'js-yaml' // .yaml File
 import * as dotenv from 'dotenv'
-import { err } from '@sapphire/framework'
-//dotenv.config() // .env File
+import { kill } from 'node:process'
 
 chalk.level = 3 // Configuring Chalk
 const client = yaml.load(fs.readFileSync('src/config/config.yml', 'utf8')) // Import The config.yaml File
@@ -34,7 +33,52 @@ inquirer
 	.then((answers) => {
 		if (answers.environment === 'Development') {
 			dotenv.config({ path: '.env' })
-			import('./fdVerification/index.js')
+			inquirer
+				.prompt([
+					{
+						type: 'list',
+						message: 'Which bot(s) do you want to boot?',
+						name: 'development',
+						choices: [
+							{
+								name: 'Floofy Den Test Bot',
+							},
+							{
+								name: 'Floofy Den Verification',
+							},
+							{
+								name: 'All',
+							},
+						],
+					},
+				])
+				.then((answers) => {
+					if (answers.development === 'Floofy Den Test Bot') {
+						import('./floofyHelper/index.js')
+						console.log(
+							chalk.white(timestamp),
+							chalk.underline.magenta('Startup'),
+							'Starting Floofy Den Test Bot...'
+						)
+					} else if (
+						answers.development === 'Floofy Den Verification'
+					) {
+						import('./fdVerification/index.js')
+						console.log(
+							chalk.white(timestamp),
+							chalk.underline.magenta('Startup'),
+							'Starting Floofy Den Verification...'
+						)
+					} else if (answers.development === 'All') {
+						import('./floofyHelper/index.js')
+						import('./fdVerification/index.js')
+						console.log(
+							chalk.white(timestamp),
+							chalk.underline.magenta('Startup'),
+							'Starting Floofy Den Verification and Floofy Den Test Bot...'
+						)
+					}
+				})
 		} else if (answers.environment === 'Production') {
 			inquirer
 				.prompt([
@@ -57,6 +101,9 @@ inquirer
 					},
 				])
 				.then((answers) => {
+					if (answers.production === 'No') {
+						kill
+					}
 					if (answers.production === 'Yes') {
 						dotenv.config({ path: '.env.production' })
 						import('./fdVerification/index.js')
