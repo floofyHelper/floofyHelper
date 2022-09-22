@@ -11,7 +11,9 @@
 			"skipFiles": ["<node_internals>/**"],
 			"program": "${workspaceFolder}/src/build/initial.js",
 			"outFiles": ["${workspaceFolder}/**/*.js"],
-			"preLaunchTask": "tsc: build - tsconfig.json"
+			"preLaunchTask": "tsc: build - tsconfig.json",
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
 		}
 	]
 }

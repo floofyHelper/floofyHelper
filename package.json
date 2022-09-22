@@ -21,6 +21,7 @@
 	"scripts": {
 		"prestart": "tsc",
 		"start": "node src/build/initial.js",
+		"stop": "killall node",
 		"lint": "eslint .",
 		"depcheck": "npx depcheck",
 		"test": "mocha",
@@ -42,7 +43,8 @@
 			"sourceType": "module"
 		},
 		"ignorePatterns": [
-			"src/build/*.js"
+			"src/build/**",
+			"src/test/**"
 		],
 		"rules": {}
 	},
@@ -62,11 +64,14 @@
 		"@sapphire/framework": "^3.1.1",
 		"chalk": "^4.0.0",
 		"cronitor": "^2.3.2",
+		"discord.js": "^13.11.0",
 		"dotenv": "^16.0.1",
+		"dotenv-vault": "^1.13.3",
 		"inquirer": "^9.1.2",
 		"js-yaml": "^4.1.0",
 		"nsfwjs": "^2.4.1",
-		"stop-discord-phishing": "^0.3.1"
+		"stop-discord-phishing": "^0.3.1",
+		"ts-node": "^10.9.1"
 	},
 	"devDependencies": {
 		"@types/inquirer": "^9.0.1",
