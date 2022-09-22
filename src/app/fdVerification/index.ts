@@ -11,7 +11,7 @@ import * as dotenv from 'dotenv' // .env File
 dotenv.config()
 
 const client = new Sapphire.SapphireClient({
-	intents: ['GUILDS', 'GUILD_MEMBERS'],
+	intents: ['Guilds', 'GuildMembers'],
 })
 
 client.login(process.env.fdVerificationToken)
