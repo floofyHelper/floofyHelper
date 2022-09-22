@@ -33,8 +33,10 @@ inquirer
 				},
 				{
 					name: `Production ${chalk.red(
-						'(This will boot the bot to '
-					)}${chalk.red.underline('every')} ${chalk.red('server!)')}`,
+						'(This will boot the bot to'
+					)} ${chalk.red.underline('every')} ${chalk.red(
+						'server!)'
+					)}`,
 				},
 			],
 		},

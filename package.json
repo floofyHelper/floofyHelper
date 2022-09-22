@@ -62,7 +62,6 @@
 		"@sapphire/framework": "^3.1.1",
 		"chalk": "^4.0.0",
 		"cronitor": "^2.3.2",
-		"discord.js": "^14.4.0",
 		"dotenv": "^16.0.1",
 		"inquirer": "^9.1.2",
 		"js-yaml": "^4.1.0",
