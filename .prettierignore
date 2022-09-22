@@ -1,8 +1,1 @@
 src/build/
-
-# Ignore artifacts:
-build
-coverage
-
-# Ignore all HTML files:
-*.html

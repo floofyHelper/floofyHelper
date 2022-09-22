@@ -19,9 +19,8 @@
 	"main": "src/build/initial.js",
 	"type": "module",
 	"scripts": {
-		"start:build": "tsc -w",
-		"start:run": "nodemon build/app.js",
-		"start": "concurrently npm:start:*",
+		"startprevious": "tsc -w",
+		"start": "node src/build/initial.js",
 		"lint": "eslint .",
 		"depcheck": "npx depcheck",
 		"test": "mocha",
@@ -51,7 +50,7 @@
 		"tabWidth": 4,
 		"semi": false,
 		"singleQuote": true,
-		"endOfLine": "auto",
+		"endOfLine": "lf",
 		"useTabs": true
 	},
 	"lint-staged": {
@@ -61,16 +60,16 @@
 	"dependencies": {
 		"@sapphire/framework": "^3.1.1",
 		"chalk": "^4.0.0",
-		"concurrently": "^7.4.0",
 		"cronitor": "^2.3.2",
 		"discord.js": "^13.11.0",
 		"dotenv": "^16.0.1",
+		"inquirer": "^9.1.2",
 		"js-yaml": "^4.1.0",
-		"nodemon": "^2.0.20",
 		"nsfwjs": "^2.4.1",
 		"stop-discord-phishing": "^0.3.1"
 	},
 	"devDependencies": {
+		"@types/inquirer": "^9.0.1",
 		"@types/js-yaml": "^4.0.5",
 		"@typescript-eslint/eslint-plugin": "^5.38.0",
 		"eslint": "^8.23.1",
