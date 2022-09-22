@@ -1,4 +1,6 @@
 {
+	"git.autorefresh": true,
+
 	// Dotenv settings
 	"dotenv.enableAutocloaking": true,
 
