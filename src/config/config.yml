@@ -26,9 +26,7 @@ floofyHelper:
         vcCooldown: 1000
         xpBoost: '[  ]' # XP Boosting Roles
 
-floofyHelper+:
-
-floofyDenVerification:
+fdVerification:
     channel: '1010210431979233322' # Channel to send verification applications
     logChannel: '989982481107263568' # Channel to send verification logs
 
