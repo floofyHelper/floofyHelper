@@ -19,7 +19,7 @@
 	"main": "src/build/initial.js",
 	"type": "module",
 	"scripts": {
-		"startprevious": "tsc -w",
+		"prestart": "tsc",
 		"start": "node src/build/initial.js",
 		"lint": "eslint .",
 		"depcheck": "npx depcheck",
