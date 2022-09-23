@@ -58,7 +58,7 @@ inquirer
 						console.log(
 							chalk.white(timestamp),
 							chalk.underline.magenta('Startup'),
-							'Starting Floofy Den Test Bot...'
+							' Starting Floofy Den Test Bot...'
 						)
 					} else if (
 						answers.development === 'Floofy Den Verification'
@@ -67,7 +67,7 @@ inquirer
 						console.log(
 							chalk.white(timestamp),
 							chalk.underline.magenta('Startup'),
-							'Starting Floofy Den Verification...'
+							' Starting Floofy Den Verification...'
 						)
 					} else if (answers.development === 'All') {
 						import('./floofyHelper/index.js')
@@ -75,7 +75,7 @@ inquirer
 						console.log(
 							chalk.white(timestamp),
 							chalk.underline.magenta('Startup'),
-							'Starting Floofy Den Verification and Floofy Den Test Bot...'
+							' Starting Floofy Den Verification and Floofy Den Test Bot...'
 						)
 					}
 				})
@@ -102,11 +102,21 @@ inquirer
 				])
 				.then((answers) => {
 					if (answers.production === 'No') {
+						console.log(
+							chalk.yellow.bold(
+								'Killing instance, restart bot to deploy'
+							)
+						)
 						kill
 					}
 					if (answers.production === 'Yes') {
 						dotenv.config({ path: '.env.production' })
 						import('./fdVerification/index.js')
+						console.log(
+							chalk.white(timestamp),
+							chalk.underline.magenta('Startup'),
+							' Starting Floofy Helper and Floofy Den Verification...'
+						)
 					}
 				})
 		}

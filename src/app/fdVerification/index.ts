@@ -3,7 +3,7 @@ import { timestamp } from '../initial.js'
 console.log(
 	chalk.white(timestamp),
 	chalk.underline.magenta('Startup'),
-	'Floofy Den Verification files found, starting bot'
+	' Floofy Den Verification files found, starting bot'
 )
 
 import Discord from 'discord.js' // Discord API
@@ -21,7 +21,7 @@ client.once('ready', () => {
 	console.log(
 		chalk.white(timestamp),
 		chalk.underline.magenta('Startup'),
-		chalk.green(`${client.user?.tag} is logged in`)
+		chalk.green(` ${client.user?.tag} is logged in`)
 	)
 	/* client.user.setPresence({
 		activities: [{ name: `${client.guild.memberCount} users`, type: Discord.ActivityType.Watching }],
