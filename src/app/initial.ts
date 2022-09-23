@@ -6,7 +6,9 @@ import * as dotenv from 'dotenv'
 import { kill } from 'node:process'
 
 chalk.level = 3 // Configuring Chalk
-const client = yaml.load(fs.readFileSync('src/config/config.yml', 'utf8')) // Import The config.yaml File
+export const config = yaml.load(
+	fs.readFileSync('src/config/config.yml', 'utf8')
+) // Import The config.yaml File
 
 export const timestamp = `${
 	new Date().getMonth() + 1
@@ -57,7 +59,7 @@ inquirer
 						import('./floofyHelper/index.js')
 						console.log(
 							chalk.white(timestamp),
-							chalk.underline.magenta('Startup'),
+							chalk.underline.magentaBright('Startup'),
 							' Starting Floofy Den Test Bot...'
 						)
 					} else if (
@@ -66,7 +68,7 @@ inquirer
 						import('./fdVerification/index.js')
 						console.log(
 							chalk.white(timestamp),
-							chalk.underline.magenta('Startup'),
+							chalk.underline.magentaBright('Startup'),
 							' Starting Floofy Den Verification...'
 						)
 					} else if (answers.development === 'All') {
@@ -74,7 +76,7 @@ inquirer
 						import('./fdVerification/index.js')
 						console.log(
 							chalk.white(timestamp),
-							chalk.underline.magenta('Startup'),
+							chalk.underline.magentaBright('Startup'),
 							' Starting Floofy Den Verification and Floofy Den Test Bot...'
 						)
 					}
@@ -86,7 +88,7 @@ inquirer
 						type: 'list',
 						message: `Are you sure? ${chalk.red(
 							'(This will boot the bot to'
-						)} ${chalk.red.underline('every')} ${chalk.red(
+						)} ${chalk.red.underline('every')} ${chalk.redBright(
 							'server!)'
 						)}`,
 						name: 'production',
@@ -103,7 +105,7 @@ inquirer
 				.then((answers) => {
 					if (answers.production === 'No') {
 						console.log(
-							chalk.yellow.bold(
+							chalk.yellowBright.bold(
 								'Killing instance, restart bot to deploy'
 							)
 						)
@@ -114,7 +116,7 @@ inquirer
 						import('./fdVerification/index.js')
 						console.log(
 							chalk.white(timestamp),
-							chalk.underline.magenta('Startup'),
+							chalk.underline.magentaBright('Startup'),
 							' Starting Floofy Helper and Floofy Den Verification...'
 						)
 					}
