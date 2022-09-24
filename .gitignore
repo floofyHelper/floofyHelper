@@ -1,3 +1,4 @@
+.vscode/settings.json
 src/build/**
 src/test/**
 node_modules
