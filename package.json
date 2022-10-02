@@ -65,7 +65,7 @@
 		"cronitor": "^2.3.2",
 		"discord.js": "^14.5.0",
 		"dotenv": "^16.0.1",
-		"dotenv-vault": "^1.13.3",
+		"dotenv-vault": "^1.13.10",
 		"inquirer": "^9.1.2",
 		"js-yaml": "^4.1.0",
 		"nsfwjs": "^2.4.1",
