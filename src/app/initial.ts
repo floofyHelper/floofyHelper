@@ -4,7 +4,9 @@ import Discord from 'discord.js' // Discord API
 import * as dotenv from 'dotenv' // .env File
 import yaml from 'js-yaml' // .yaml File
 import fs from 'node:fs' // File System
-import { kill } from 'node:process'
+import kill from 'node:process'
+
+// -------------------------------------------------------------------------------
 
 chalk.level = 3 // Configuring Chalk
 dotenv.config({ path: '.env' }) // Configuring Dotenv
@@ -12,7 +14,7 @@ export const config = yaml.load(
 	// Import The config.yaml File
 	fs.readFileSync('src/config/config.yml', 'utf8')
 )
-export const timestamp = `${
+export let timestamp = `${
 	// Configure the timestamp constant
 	new Date().getMonth() + 1
 }-${new Date().getDate()}-${new Date().getFullYear()} ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
@@ -29,6 +31,7 @@ export const client2 = new Discord.Client({
 	intents: [
 		Discord.GatewayIntentBits.Guilds,
 		Discord.GatewayIntentBits.GuildMembers,
+		Discord.GatewayIntentBits.GuildMessages,
 	],
 })
 

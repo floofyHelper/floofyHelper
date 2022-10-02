@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import Discord from 'discord.js'
 import { REST } from '@discordjs/rest' // Discord API
-import { timestamp, client2 } from '../initial.js'
+import { timestamp, client2 as client } from '../initial.js'
 
 // -------------------------------------------------------------------------------
 
@@ -43,12 +43,12 @@ const rest = new REST({ version: '10' }).setToken(
 
 rest.put(
 	Discord.Routes.applicationCommands(process.env.fdVerificationClientID!),
-	{ body: deleteSlashCommands }
+	{ body: commands }
 )
 	.then(() =>
 		console.log(
 			chalk.white(timestamp),
-			chalk.underline.blueBright(client2.user?.username),
+			chalk.underline.blueBright(client.user?.username),
 			chalk.greenBright(' Successfully registered slash commands')
 		)
 	)

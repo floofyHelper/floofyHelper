@@ -1,9 +1,3 @@
-client: test2
-# Which bot to deploy to. Type `test` or `stable`.
-# If in test mode, you have 3 options to deploy:
-# `test1` deploys to Floofy Den Test Bot
-# `test2` deploys to Floofy Den Verification
-# `test` deploys to both
 discordAPIVersion: 10 # Which Discord API version to use
 
 floofyHelper:
@@ -24,7 +18,7 @@ floofyHelper:
         imgCooldown: 300 # in milliseconds
         vcRate: 10 # amount of points to award for being in VC for vcCooldown milliseconds
         vcCooldown: 1000
-        xpBoost: '[  ]' # XP Boosting Roles
+        xpBoost: '[ ]' # XP Boosting Roles
 
 fdVerification:
     channel: '1010210431979233322' # Channel to send verification applications
