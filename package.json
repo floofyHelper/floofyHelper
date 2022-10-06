@@ -61,7 +61,7 @@
 		"*.{js,css,md}": "prettier --write"
 	},
 	"dependencies": {
-		"chalk": "^4.0.0",
+		"chalk": "^5.1.0",
 		"cronitor": "^2.3.2",
 		"discord.js": "^14.5.0",
 		"dotenv": "^16.0.1",
