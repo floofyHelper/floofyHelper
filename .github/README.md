@@ -20,6 +20,7 @@
 
 -   Use `npx depcheck` to see unused dependencies
 -   `./app/index` needs working
+-   Add a proof function to the ban feature, you can add a image to provide as proof and it logs the image with the ban
 
 #### Features to add
 

@@ -24,6 +24,10 @@ fdVerification:
     channel: '1010210431979233322' # Channel to send verification applications
     logChannel: '989982481107263568' # Channel to send verification logs
 
+testing:
+    verificationChannel: '1010210431979233322' # Channel to send testing verification applications
+    verificationLogChannel: '1010316764904685618' # Channel to send testing verification logs
+
 cronitor:
     Floofy Helper Bot:
         # configure monitor as a heartbeat

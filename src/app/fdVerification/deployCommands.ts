@@ -1,7 +1,7 @@
 import chalk from 'chalk'
-import Discord from 'discord.js'
-import { REST } from '@discordjs/rest' // Discord API
-import { timestamp, client2 as client } from '../initial.js'
+import Discord from 'discord.js' // Discord API
+import { REST } from '@discordjs/rest'
+import { timestamp, config, client2 as client } from '../initial.js'
 
 // -------------------------------------------------------------------------------
 
@@ -34,10 +34,11 @@ const commands = [
 
 	new Discord.SlashCommandBuilder()
 		.setName('help')
-		.setDescription('Having issues with verification?'),
+		.setDescription('Having issues with verification?')
+		.setDMPermission(false),
 ]
 
-const rest = new REST({ version: '10' }).setToken(
+const rest = new REST({ version: config.discordAPIVersion }).setToken(
 	process.env.fdVerificationToken!
 )
 
