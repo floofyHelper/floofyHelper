@@ -12,7 +12,6 @@ import Discord, {
 	Message,
 	MessageManager,
 } from 'discord.js' // Discord API
-import Tabler from '@tabler/icons' // Icons
 import fs from 'node:fs' // File System
 import path from 'node:path'
 import { button, embed, modal, selectMenu } from './components.js'

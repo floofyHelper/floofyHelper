@@ -1,4 +1,3 @@
-import { IconBrandTabler } from '@tabler/icons'
 import Discord, { ModalActionRowComponentBuilder } from 'discord.js'
 
 // -------------------------------------------------------------------------------
@@ -32,20 +31,20 @@ export const button: any = {
 					.setStyle(Discord.ButtonStyle.Secondary)
 			),
 
-	verification2:(id: any) =>
-	 new Discord.ActionRowBuilder() //
-		.addComponents(
-			new Discord.ButtonBuilder()
-				.setCustomId(`verification2 1,${id}`)
-				.setLabel('Submit')
-				.setStyle(Discord.ButtonStyle.Success)
-		)
-		.addComponents(
-			new Discord.ButtonBuilder()
-				.setCustomId(`verification2 2,${id}`)
-				.setLabel('Restart')
-				.setStyle(Discord.ButtonStyle.Secondary)
-		),
+	verification2: (id: any) =>
+		new Discord.ActionRowBuilder() //
+			.addComponents(
+				new Discord.ButtonBuilder()
+					.setCustomId(`verification2 1,${id}`)
+					.setLabel('Submit')
+					.setStyle(Discord.ButtonStyle.Success)
+			)
+			.addComponents(
+				new Discord.ButtonBuilder()
+					.setCustomId(`verification2 2,${id}`)
+					.setLabel('Restart')
+					.setStyle(Discord.ButtonStyle.Secondary)
+			),
 
 	under13: new Discord.ActionRowBuilder() //
 		.addComponents(
