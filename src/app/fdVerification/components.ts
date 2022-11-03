@@ -37,7 +37,7 @@ export const button: any = {
 				new Discord.ButtonBuilder()
 					.setCustomId(`verification2 1,${id}`)
 					.setLabel('Submit')
-					.setStyle(Discord.ButtonStyle.Success)
+					.setStyle(Discord.ButtonStyle.Secondary)
 			)
 			.addComponents(
 				new Discord.ButtonBuilder()
@@ -111,10 +111,11 @@ export const embed: any = {
 				"Before you can access the server, we need you to answer some questions to make sure this server is a good fit for you. Whenever you're ready, please start below. \n \n > Please select your age group below to verify your account. \n > **Lying about your age will result in a ban.**"
 			),
 
-	verification2: (interaction: any) =>
+	verification2: (interaction: any, guildIcon: any) =>
 		new Discord.EmbedBuilder()
 			.setAuthor({
 				name: 'Look over your application, want to change anything?',
+				iconURL: `${guildIcon}`,
 			})
 			.addFields(
 				{
@@ -202,11 +203,25 @@ export const embed: any = {
 				}
 			),
 
-	verificationReview: (interaction: any, guildID: any) =>
+	verificationReview: (
+		interaction: any,
+		guildID: string,
+		status: string,
+		age: string,
+		invite: string,
+		userCheck1: string,
+		userCheck2: string,
+		userCheck3: string,
+		response1: string,
+		response2: string,
+		response3: string,
+		response4: string,
+		response5: string
+	) =>
 		new Discord.EmbedBuilder()
 			.setColor(0xeb716f)
 			.setAuthor({
-				name: 'Verification Application (Kicked)',
+				name: `Verification Application${status}`,
 				iconURL: `${interaction.client.guilds.cache
 					.get(guildID)
 					?.iconURL()}`,
@@ -222,11 +237,13 @@ export const embed: any = {
 						interaction.user.createdTimestamp / 1000
 					)}:f>, <t:${Math.round(
 						interaction.user.createdTimestamp / 1000
-					)}:R>\n> **User Age:** Under 13\n> **Invite Link:** \`null\`\n> **Joined From:** \`null\``,
+					)}:R>\n> **User Age:** ${age}\n> **Invite Link:** ${invite
+						.split(',')
+						.at(0)}\n> **Joined From:** ${invite.split(',').at(1)}`,
 				},
 				{
 					name: 'User Check:',
-					value: '> <:Check:1015719865572667625> Account age older than 2 weeks\n> <:Check:1015719865572667625> User read/agreed to rules\n> <:Cross:1015719863446151198> Account not trusted **(User is under 13)**',
+					value: `> ${userCheck1}\n> ${userCheck2}\n> ${userCheck3}`,
 				},
 				{
 					name: 'Reason:',

@@ -1,11 +1,19 @@
 {
-	// Git settings
+	/* Git settings */
 	"git.autorefresh": true,
 
-	// Dotenv settings
+	/* Dotenv settings */
 	"dotenv.enableAutocloaking": true,
 
-	// Prettier settings
+	/* Prettier settings */
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnSave": true
+
+	/* Grammarly settings */
+	/*"grammarly.selectors": [
+		{
+			"language": "typescript",
+			"scheme": "file"
+		}
+	]*/
 }
