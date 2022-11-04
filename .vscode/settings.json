@@ -3,7 +3,7 @@
 	"git.autorefresh": true,
 
 	/* Dotenv settings */
-	"dotenv.enableAutocloaking": false,
+	"dotenv.enableAutocloaking": true,
 
 	/* Prettier settings */
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
