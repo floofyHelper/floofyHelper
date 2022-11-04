@@ -10,13 +10,92 @@ console.log(
 	chalk.underline.magentaBright('Startup'),
 	` ${client.user?.username} files found, starting bot...`
 )
-import Discord from 'discord.js' // Discord API
-import fs from 'node:fs' // File System
-import path from 'node:path'
-import { button, embed, modal, selectMenu } from './components.js'
+import Discord, { Guild } from 'discord.js' // Discord API
+import { button, embed, modal, selectMenu, webhook } from './components.js'
 import('./deployCommands.js')
 
-// -------------------------------------------------------------------------------
+{
+	{
+		{
+			{
+				{
+					{
+						{
+							{
+								{
+									{
+										{
+											{
+												{
+													{
+														{
+															{
+																{
+																	{
+																		{
+																			{
+																				{
+																					{
+																						{
+																							{
+																								{
+																									{
+																										{
+																											{
+																												{
+																													{
+																														{
+																															{
+																																{
+																																	{
+																																		{
+																																			{
+																																				{
+																																					{
+																																						{
+																																							{
+																																								{
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
 
 client.on('guildMemberAdd', async (member) => {
 	if (member.guild.id === '943404593105231882')
@@ -39,6 +118,22 @@ client.on('guildMemberAdd', async (member) => {
 			embeds: [embed.verification(member.user, member.guild)],
 			components: [buttons],
 		})
+		// Adding verification data to database
+		await data
+			.db('BaseInteraction')
+			.collection('guild')
+			.updateOne(
+				{ _id: member.guild.id },
+				{
+					$set: {
+						name: member.guild.name,
+					},
+					$addToSet: {
+						verification: member.user.id,
+					},
+				},
+				{ upsert: true }
+			)
 	}
 })
 
@@ -283,12 +378,20 @@ client.on('interactionCreate', async (interaction) => {
 			_id: string | undefined
 			name: string | undefined
 			settings: {
-				verificationType: number
+				permissions: {
+					lvl4: never[]
+					lvl3: never[]
+					lvl2: never[]
+					lvl1: never[]
+				}
+				verification: {
+					type: number
+					channel: { verify: number; logging: number }
+				}
 				embeds: { verification: number[] }
 			}
 			verification: {
 				[x: string]: {
-					verifyType: number
 					username: string | undefined
 					invite: {
 						url: string | undefined
@@ -299,23 +402,34 @@ client.on('interactionCreate', async (interaction) => {
 			}
 		}
 		data.db('BaseInteraction')
-			.collection<verification>('guild')
+			.collection<verification>('test')
 			.insertOne({
 				_id: guildId,
 				name: client.guilds.cache.get(guildId!)?.name,
 				settings: {
-					verificationType: 1,
+					permissions: {
+						lvl4: [],
+						lvl3: [],
+						lvl2: [],
+						lvl1: [],
+					},
+					verification: {
+						type: 1,
+						channel: {
+							verify: 1234,
+							logging: 1234,
+						},
+					},
 					embeds: {
 						verification: [1, 2, 3],
 					},
 				},
 				verification: {
 					[interaction.user.id]: {
-						verifyType: 1,
 						username: interaction.user.username,
 						invite: {
-							url: 'evdscfERv',
-							author: 'Acestriker#0001',
+							url: undefined,
+							author: undefined,
 						},
 						modalResponses: [
 							interaction.fields.getTextInputValue(
@@ -352,6 +466,89 @@ client.on('interactionCreate', async (interaction) => {
 	}
 })
 
+// -------------------------------------------------------------------------------
+{
+	{
+		{
+			{
+				{
+					{
+						{
+							{
+								{
+									{
+										{
+											{
+												{
+													{
+														{
+															{
+																{
+																	{
+																		{
+																			{
+																				{
+																					{
+																						{
+																							{
+																								{
+																									{
+																										{
+																											{
+																												{
+																													{
+																														{
+																															{
+																																{
+																																	{
+																																		{
+																																			{
+																																				{
+																																					{
+																																						{
+																																							{
+																																								{
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
 // -------------------------------------------------------------------------------
 
 console.log(
