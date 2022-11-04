@@ -18,14 +18,6 @@ import('./deployCommands.js')
 
 // -------------------------------------------------------------------------------
 
-data.db('UserId')
-	.collection('UnverifiedDm')
-	.insertMany([
-		{
-			1001: '3453364, 36457687647536, 2345987865734567587, 3456789876543, 567890-09876543456',
-		},
-	])
-
 client.on('guildMemberAdd', async (member) => {
 	if (member.guild.id === '943404593105231882')
 		return /* REMOVE THIS BEFORE STAGING */
@@ -43,21 +35,10 @@ client.on('guildMemberAdd', async (member) => {
 		buttons.components[3]
 			.setDisabled(false)
 			.setStyle(Discord.ButtonStyle.Secondary)
-
-		data.db('UserId')
-			.collection('UnverifiedDm')
-			.insertMany([
-				{
-					[member.guild.id]: 'null',
-				},
-			])
-
-		null,
-			undefined,
-			await member.send({
-				embeds: [embed.verification(member.user, member.guild)],
-				components: [buttons],
-			})
+		await member.send({
+			embeds: [embed.verification(member.user, member.guild)],
+			components: [buttons],
+		})
 	}
 })
 
@@ -297,6 +278,65 @@ client.on('interactionCreate', async (interaction) => {
 				components: [button.verification2(id)],
 			})
 			.catch(console.error)
+		// Sending Modal Submission to Database
+		interface verification {
+			_id: string | undefined
+			name: string | undefined
+			settings: {
+				verificationType: number
+				embeds: { verification: number[] }
+			}
+			verification: {
+				[x: string]: {
+					verifyType: number
+					username: string | undefined
+					invite: {
+						url: string | undefined
+						author: string | undefined
+					}
+					modalResponses: { [x: string]: any }
+				}
+			}
+		}
+		data.db('BaseInteraction')
+			.collection<verification>('guild')
+			.insertOne({
+				_id: guildId,
+				name: client.guilds.cache.get(guildId!)?.name,
+				settings: {
+					verificationType: 1,
+					embeds: {
+						verification: [1, 2, 3],
+					},
+				},
+				verification: {
+					[interaction.user.id]: {
+						verifyType: 1,
+						username: interaction.user.username,
+						invite: {
+							url: 'evdscfERv',
+							author: 'Acestriker#0001',
+						},
+						modalResponses: [
+							interaction.fields.getTextInputValue(
+								'verification1 1'
+							),
+							interaction.fields.getTextInputValue(
+								'verification1 2'
+							),
+							interaction.fields.getTextInputValue(
+								'verification1 3'
+							),
+							interaction.fields.getTextInputValue(
+								'verification1 4'
+							),
+							interaction.fields.getTextInputValue(
+								'verification1 5'
+							),
+						],
+					},
+				},
+			})
 	}
 })
 

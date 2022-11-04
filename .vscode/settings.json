@@ -3,11 +3,11 @@
 	"git.autorefresh": true,
 
 	/* Dotenv settings */
-	"dotenv.enableAutocloaking": true,
+	"dotenv.enableAutocloaking": false,
 
 	/* Prettier settings */
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"editor.formatOnSave": true
+	"editor.formatOnSave": true,
 
 	/* Grammarly settings */
 	/*"grammarly.selectors": [
@@ -16,4 +16,9 @@
 			"scheme": "file"
 		}
 	]*/
+
+	/* Discord Rich Presence settings */
+	"vscord.status.details.text.viewing": "In Floofy Helper {problems}",
+	"vscord.status.button.active.url": "https://github.com/floofyHelper/floofyHelper",
+	"vscord.status.button.active.enabled": false
 }

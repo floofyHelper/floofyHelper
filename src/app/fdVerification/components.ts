@@ -356,3 +356,4 @@ export const selectMenu: any = {}
 // -------------------------------------------------------------------------------
 
 /* Webhooks */
+export const webhook: any = {}
