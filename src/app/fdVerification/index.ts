@@ -67,7 +67,7 @@ async function errorLog(err: any, interaction: any) {
 			err
 		)
 	} catch (err) {
-		console.log(err)
+		console.error(err)
 	}
 }
 
