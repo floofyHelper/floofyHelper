@@ -17,12 +17,79 @@ import('./deployCommands.js')
 
 // -------------------------------------------------------------------------------
 
-async function errorLog(err: any, interaction: any) {
+async function checkForMatchingThread(
+	forumChannel: any,
+	threadAuthorId: any,
+	arrayName: string,
+	arrayDescription: string,
+	embed: any
+) {
+	try {
+		// Checks to see if there is an already existing thread
+		forumChannel.threads.fetch().then(async (collection: any) => {
+			if (client.user?.id !== threadAuthorId) return
+			const name = collection.threads.find((array: any) => {
+				return array.name === arrayName
+			})
+			const user = collection.threads.some((array: any) => {
+				return array.ownerId === threadAuthorId
+			})
+			if (
+				name === undefined ||
+				(name instanceof Object === true && user === false)
+			) {
+				await forumChannel.threads.create({
+					name: arrayName,
+					message: {
+						content: arrayDescription,
+					},
+				})
+			}
+			// Log message in channel
+			forumChannel.threads
+				.fetch()
+				.then(async (collection: any, name: any) => {
+					if (client.user?.id !== threadAuthorId) return
+					const newCollection = collection.threads.find(
+						(array: any) => {
+							return array.name === arrayName
+						}
+					)
+					if (name === undefined) {
+						await newCollection.send({
+							embeds: [embed],
+						})
+					} else {
+						await name.send({ embeds: [embed] })
+					}
+				})
+		})
+	} catch (err) {
+		console.error(
+			chalk.white(timestamp),
+			chalk.underline.blueBright(client.user?.username),
+			' ',
+			err
+		)
+	}
+}
+
+async function sendToErrorLog(err: any, interaction: any) {
 	try {
 		// Send error embed to user
-		interaction.send({ embeds: [embed.error], components: [button.error] })
-		// Checks to see if there is an already existing "Error Log" thread
-		const channel: any = client.channels.cache.get(process.env.errorLog!)
+		await interaction.send({
+			embeds: [embed.error],
+			components: [button.error],
+		})
+		// Log error in error logging channel
+		await checkForMatchingThread(
+			client.channels.cache.get(process.env.errorLog!),
+			'989979801894912040',
+			'🛑 Error Log',
+			'## <:myBots:1001930208393314334> This channel is used to inform devs of errors with <@!953794936736727110>\n\n- Follow this channel to receive alerts',
+			embed.errorLog(err)
+		)
+		/*const channel: any = client.channels.cache.get(process.env.errorLog!)
 		channel.threads.fetch().then(async (collection: any) => {
 			if (client.user?.id !== '953794936736727110') return
 			const name = collection.threads.find((array: any) => {
@@ -50,15 +117,14 @@ async function errorLog(err: any, interaction: any) {
 					return array.name === '🛑 Error Log'
 				})
 				if (name === undefined) {
-					if (newCollection === undefined) return
 					await newCollection.send({
 						embeds: [embed.errorLog(err)],
 					})
 				} else {
-					name.send({ embeds: [embed.errorLog(err)] })
+					await name.send({ embeds: [embed.errorLog(err)] })
 				}
 			})
-		})
+		})*/
 		// Log error in console
 		console.error(
 			chalk.white(timestamp),
@@ -67,7 +133,12 @@ async function errorLog(err: any, interaction: any) {
 			err
 		)
 	} catch (err) {
-		console.error(err)
+		console.error(
+			chalk.white(timestamp),
+			chalk.underline.blueBright(client.user?.username),
+			' ',
+			err
+		)
 	}
 }
 
@@ -117,7 +188,7 @@ client.on('guildMemberAdd', async (member) => {
 				components: [buttons],
 			})
 		} catch (err) {
-			await errorLog(err, member)
+			await sendToErrorLog(err, member)
 		}
 	}
 })
