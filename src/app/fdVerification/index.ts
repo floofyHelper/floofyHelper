@@ -26,15 +26,15 @@ function consoleLogError(err: any) {
 }
 
 async function forumCheckForExistingThreadThenLog(
-	forumChannel: string,
+	forumChannelId: string,
 	threadAuthorId: string,
 	threadName: string,
 	threadDescription: string,
-	embed: any
+	messageComponents: any
 ) {
 	try {
 		// Checks to see if there is an already existing forum thread. If not, create one
-		const channel: any = client.channels.cache.get(forumChannel)
+		const channel: any = client.channels.cache.get(forumChannelId)
 		channel.threads.fetch().then(async (collection: any) => {
 			if (client.user?.id !== threadAuthorId) return
 			const name = collection.threads.find((array: any) => {
@@ -61,11 +61,9 @@ async function forumCheckForExistingThreadThenLog(
 					return array.name === threadName
 				})
 				if (name === undefined) {
-					await newCollection.send({
-						embeds: [embed],
-					})
+					await newCollection.send(messageComponents)
 				} else {
-					await name.send({ embeds: [embed] })
+					await name.send(messageComponents)
 				}
 			})
 		})
@@ -80,14 +78,15 @@ async function sendToErrorLog(err: any, interaction: any) {
 		await interaction.send({
 			embeds: [embed.error],
 			components: [button.error],
+			ephemeral: true,
 		})
 		// Log error in error logging channel
 		await forumCheckForExistingThreadThenLog(
 			process.env.errorLog!,
-			'989979801894912040',
+			'989979801894912040', // CHANGE TO MAIN BOT ID BEFORE STAGING
 			'🛑 Error Log',
 			'## <:myBots:1001930208393314334> This channel is used to inform devs of errors with <@!953794936736727110>\n\n- Follow this channel to receive alerts',
-			embed.errorLog(err)
+			{ embeds: [embed.errorLog(err)], components: [button.error] }
 		)
 		// Log error in console
 		consoleLogError(err)
@@ -102,46 +101,45 @@ client.on('guildMemberAdd', async (member) => {
 	try {
 		if (member.guild.id === '943404593105231882')
 			return /* REMOVE THIS BEFORE STAGING */
-		if (member.user.bot === false) {
-			const buttons: any = button.verification(member.guild.id)
-			buttons.components[0]
-				.setDisabled(false)
-				.setStyle(Discord.ButtonStyle.Secondary)
-			buttons.components[1]
-				.setDisabled(false)
-				.setStyle(Discord.ButtonStyle.Secondary)
-			buttons.components[2]
-				.setDisabled(false)
-				.setStyle(Discord.ButtonStyle.Secondary)
-			buttons.components[3]
-				.setDisabled(false)
-				.setStyle(Discord.ButtonStyle.Secondary)
-			// Adding guild & verification data to database
-			await data
-				.db('BaseInteraction')
-				.collection('guild')
-				.updateOne(
-					{ _id: member.guild.id },
-					{
-						$set: {
-							name: member.guild.name,
-						},
-						$addToSet: {
-							verification: {
-								[member.user.id]: {
-									username: member.user.username,
-								},
+		if (member.user.bot === true) return
+		const buttons: any = button.verification(member.guild.id)
+		buttons.components[0]
+			.setDisabled(false)
+			.setStyle(Discord.ButtonStyle.Secondary)
+		buttons.components[1]
+			.setDisabled(false)
+			.setStyle(Discord.ButtonStyle.Secondary)
+		buttons.components[2]
+			.setDisabled(false)
+			.setStyle(Discord.ButtonStyle.Secondary)
+		buttons.components[3]
+			.setDisabled(false)
+			.setStyle(Discord.ButtonStyle.Secondary)
+		// Adding guild & verification data to database
+		await data
+			.db('BaseInteraction')
+			.collection('guild')
+			.updateOne(
+				{ _id: member.guild.id },
+				{
+					$set: {
+						name: member.guild.name,
+					},
+					$addToSet: {
+						verification: {
+							[member.user.id]: {
+								username: member.user.username,
 							},
 						},
 					},
-					{ upsert: true }
-				)
-			// Sending first verification embed to user
-			await member.send({
-				embeds: [embed.verification(member.user, member.guild)],
-				components: [buttons],
-			})
-		}
+				},
+				{ upsert: true }
+			)
+		// Sending first verification embed to user
+		await member.send({
+			embeds: [embed.verification(member.user, member.guild)],
+			components: [buttons],
+		})
 	} catch (err) {
 		await sendToErrorLog(err, member)
 	}
