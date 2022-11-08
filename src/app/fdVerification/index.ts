@@ -10,92 +10,68 @@ console.log(
 	chalk.underline.magentaBright('Startup'),
 	` ${client.user?.username} files found, starting bot...`
 )
-import Discord, { Guild } from 'discord.js' // Discord API
-import { button, embed, modal, selectMenu, webhook } from './components.js'
+import Discord from 'discord.js' // Discord API
+import { button, embed, modal } from './components.js'
+import { resolve } from 'path'
 import('./deployCommands.js')
 
-{
-	{
-		{
-			{
-				{
-					{
-						{
-							{
-								{
-									{
-										{
-											{
-												{
-													{
-														{
-															{
-																{
-																	{
-																		{
-																			{
-																				{
-																					{
-																						{
-																							{
-																								{
-																									{
-																										{
-																											{
-																												{
-																													{
-																														{
-																															{
-																																{
-																																	{
-																																		{
-																																			{
-																																				{
-																																					{
-																																						{
-																																							{
-																																								{
-																																								}
-																																							}
-																																						}
-																																					}
-																																				}
-																																			}
-																																		}
-																																	}
-																																}
-																															}
-																														}
-																													}
-																												}
-																											}
-																										}
-																									}
-																								}
-																							}
-																						}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+// -------------------------------------------------------------------------------
+
+async function errorLog(err: any, interaction: any) {
+	try {
+		// Send error embed to user
+		interaction.send({ embeds: [embed.error], components: [button.error] })
+		// Checks to see if there is an already existing "Error Log" thread
+		const channel: any = client.channels.cache.get(process.env.errorLog!)
+		channel.threads.fetch().then(async (collection: any) => {
+			if (client.user?.id !== '953794936736727110') return
+			const name = collection.threads.find((array: any) => {
+				return array.name === '🛑 Error Log'
+			})
+			const user = collection.threads.some((array: any) => {
+				return array.ownerId === '953794936736727110'
+			})
+			if (
+				name === undefined ||
+				(name instanceof Object === true && user === false)
+			) {
+				await channel.threads.create({
+					name: '🛑 Error Log',
+					message: {
+						content:
+							'## <:myBots:1001930208393314334> This channel is used to inform devs of errors with <@!953794936736727110>\n\n- Follow this channel to receive alerts',
+					},
+				})
 			}
-		}
+			// Log error in error logging channel
+			channel.threads.fetch().then(async (collection: any, name: any) => {
+				if (client.user?.id !== '953794936736727110') return
+				const newCollection = collection.threads.find((array: any) => {
+					return array.name === '🛑 Error Log'
+				})
+				if (name === undefined) {
+					if (newCollection === undefined) return
+					await newCollection.send({
+						embeds: [embed.errorLog(err)],
+					})
+				} else {
+					name.send({ embeds: [embed.errorLog(err)] })
+				}
+			})
+		})
+		// Log error in console
+		console.error(
+			chalk.white(timestamp),
+			chalk.underline.blueBright(client.user?.username),
+			' ',
+			err
+		)
+	} catch (err) {
+		console.log(err)
 	}
 }
+
+// -------------------------------------------------------------------------------
 
 client.on('guildMemberAdd', async (member) => {
 	if (member.guild.id === '943404593105231882')
@@ -114,32 +90,42 @@ client.on('guildMemberAdd', async (member) => {
 		buttons.components[3]
 			.setDisabled(false)
 			.setStyle(Discord.ButtonStyle.Secondary)
-		await member.send({
-			embeds: [embed.verification(member.user, member.guild)],
-			components: [buttons],
-		})
-		// Adding verification data to database
-		await data
-			.db('BaseInteraction')
-			.collection('guild')
-			.updateOne(
-				{ _id: member.guild.id },
-				{
-					$set: {
-						name: member.guild.name,
+		try {
+			// Adding guild & verification data to database
+			await data
+				.db('BaseInteraction')
+				.collection('guild')
+				.updateOne(
+					{ _id: member.guild.id },
+					{
+						$set: {
+							name: member.guild.name,
+						},
+						$addToSet: {
+							verification: {
+								[member.user.id]: {
+									username: member.user.username,
+								},
+							},
+						},
 					},
-					$addToSet: {
-						verification: member.user.id,
-					},
-				},
-				{ upsert: true }
-			)
+					{ upsert: true }
+				)
+			// Sending first verification embed to user
+			await member.send({
+				embeds: [embed.verification(member.user, member.guild)],
+				components: [buttons],
+			})
+		} catch (err) {
+			await errorLog(err, member)
+		}
 	}
 })
 
 client.on('interactionCreate', async (interaction) => {
 	if (!interaction.isButton()) return
 	if (interaction.customId.startsWith('verification1 1')) {
+		console.log(interaction)
 		interaction.message.delete()
 		await interaction.user.send({
 			embeds: [embed.under13],
@@ -207,28 +193,29 @@ client.on('interactionCreate', async (interaction) => {
 			embeds: [embed.verificationApplicationSuccess(age, 2, 3, 4, 5, 6)],
 		})
 		// SENDING EMBED TO VERIFICATION CHANNEL
-		const channel: any = client.channels.cache.get(
-			config.testing.verificationChannel
-		)
-		if (channel?.isTextBased()) {
-			let invite = undefined
-			let userCheck1 = undefined
-			let userCheck2 = undefined
-			let userCheck3 = undefined
-			let response1 = undefined
-			let response2 = undefined
-			let response3 = undefined
-			let response4 = undefined
-			let response5 = undefined
-
-			/* Invite */
-
+		try {
 			const guildId: any = interaction.customId.split(',').at(1)
+			const channelId = await data
+				.db('BaseInteraction')
+				.collection('guild')
+				.findOne({ _id: guildId })
+			const channel: any = client.channels.cache.get(
+				channelId?.settings.channels.errorLogging
+			)
+			console.log(channel)
 			await channel.send({
 				embeds: [
 					embed.verificationReview(interaction, guildId, null, age),
 				],
 			})
+		} catch (err) {
+			console.error(err)
+
+			/*await channel.send({
+				embeds: [
+					embed.verificationReview(interaction, guildId, null, age),
+				],
+			})*/
 		}
 	}
 
@@ -374,7 +361,7 @@ client.on('interactionCreate', async (interaction) => {
 			})
 			.catch(console.error)
 		// Sending Modal Submission to Database
-		interface verification {
+		/*interface verification {
 			_id: string | undefined
 			name: string | undefined
 			settings: {
@@ -450,7 +437,7 @@ client.on('interactionCreate', async (interaction) => {
 						],
 					},
 				},
-			})
+			})*/
 	}
 })
 
@@ -466,89 +453,6 @@ client.on('interactionCreate', async (interaction) => {
 	}
 })
 
-// -------------------------------------------------------------------------------
-{
-	{
-		{
-			{
-				{
-					{
-						{
-							{
-								{
-									{
-										{
-											{
-												{
-													{
-														{
-															{
-																{
-																	{
-																		{
-																			{
-																				{
-																					{
-																						{
-																							{
-																								{
-																									{
-																										{
-																											{
-																												{
-																													{
-																														{
-																															{
-																																{
-																																	{
-																																		{
-																																			{
-																																				{
-																																					{
-																																						{
-																																							{
-																																								{
-																																								}
-																																							}
-																																						}
-																																					}
-																																				}
-																																			}
-																																		}
-																																	}
-																																}
-																															}
-																														}
-																													}
-																												}
-																											}
-																										}
-																									}
-																								}
-																							}
-																						}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
 // -------------------------------------------------------------------------------
 
 console.log(

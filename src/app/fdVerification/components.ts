@@ -4,44 +4,52 @@ import Discord, { ModalActionRowComponentBuilder } from 'discord.js'
 
 /* Buttons */
 export const button: any = {
-	verification: (id: any) =>
+	error: new Discord.ActionRowBuilder() //
+		.addComponents(
+			new Discord.ButtonBuilder()
+				.setLabel('Support Server')
+				.setURL('https://discord.gg/hRmjAUvrpT')
+				.setStyle(Discord.ButtonStyle.Link)
+		),
+
+	verification: (guildId: any) =>
 		new Discord.ActionRowBuilder()
 			.addComponents(
 				new Discord.ButtonBuilder()
-					.setCustomId(`verification1 1,${id}`)
+					.setCustomId(`verification1 1,${guildId}`)
 					.setLabel('Under 13')
 					.setStyle(Discord.ButtonStyle.Secondary)
 			)
 			.addComponents(
 				new Discord.ButtonBuilder()
-					.setCustomId(`verification1 2,${id}`)
+					.setCustomId(`verification1 2,${guildId}`)
 					.setLabel('13-15')
 					.setStyle(Discord.ButtonStyle.Secondary)
 			)
 			.addComponents(
 				new Discord.ButtonBuilder()
-					.setCustomId(`verification1 3,${id}`)
+					.setCustomId(`verification1 3,${guildId}`)
 					.setLabel('16-17')
 					.setStyle(Discord.ButtonStyle.Secondary)
 			)
 			.addComponents(
 				new Discord.ButtonBuilder()
-					.setCustomId(`verification1 4,${id}`)
+					.setCustomId(`verification1 4,${guildId}`)
 					.setLabel('18+')
 					.setStyle(Discord.ButtonStyle.Secondary)
 			),
 
-	verification2: (id: any) =>
+	verification2: (guildId: any) =>
 		new Discord.ActionRowBuilder() //
 			.addComponents(
 				new Discord.ButtonBuilder()
-					.setCustomId(`verification2 1,${id}`)
+					.setCustomId(`verification2 1,${guildId}`)
 					.setLabel('Submit')
 					.setStyle(Discord.ButtonStyle.Secondary)
 			)
 			.addComponents(
 				new Discord.ButtonBuilder()
-					.setCustomId(`verification2 2,${id}`)
+					.setCustomId(`verification2 2,${guildId}`)
 					.setLabel('Restart')
 					.setStyle(Discord.ButtonStyle.Secondary)
 			),
@@ -101,6 +109,25 @@ export const button: any = {
 
 /* Embeds */
 export const embed: any = {
+	error: new Discord.EmbedBuilder() //
+		.setColor(0xeb716f)
+		.setAuthor({
+			name: 'Something went wrong!',
+			iconURL:
+				'https://cdn.discordapp.com/emojis/1015719863446151198.webp?size=240&quality=lossless',
+		}),
+
+	errorLog: (errorReason: any) =>
+		new Discord.EmbedBuilder() //
+			.setColor(0xeb716f)
+			.setAuthor({
+				name: 'Floofy Helper has had an error!',
+				iconURL:
+					'https://cdn.discordapp.com/emojis/1015719863446151198.webp?size=240&quality=lossless',
+			})
+			.setDescription(`\`\`\`ts\n${errorReason}\`\`\``)
+			.setTimestamp(),
+
 	verification: (interaction: any, interaction2: any) =>
 		new Discord.EmbedBuilder()
 			.setAuthor({
@@ -237,9 +264,9 @@ export const embed: any = {
 						interaction.user.createdTimestamp / 1000
 					)}:f>, <t:${Math.round(
 						interaction.user.createdTimestamp / 1000
-					)}:R>\n> **User Age:** ${age}\n> **Invite Link:** ${invite
+					)}:R>` /*`\n> **User Age:** ${age}\n> **Invite Link:** ${invite
 						.split(',')
-						.at(0)}\n> **Joined From:** ${invite.split(',').at(1)}`,
+						.at(0)}\n> **Joined From:** ${invite.split(',').at(1)}`*/,
 				},
 				{
 					name: 'User Check:',
