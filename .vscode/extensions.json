@@ -1,8 +1,0 @@
-{
-  "recommendations": [
-    "dotenv.dotenv-vscode",
-    "dbaeumer.vscode-eslint",
-    "redhat.vscode-yaml",
-    "esbenp.prettier-vscode"
-  ]
-}
