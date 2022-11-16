@@ -1,11 +1,9 @@
-import chalk from 'chalk';
-import Discord from 'discord.js'; // Discord API
-import { REST } from '@discordjs/rest';
-import { timestamp, client } from '../initial.js';
+import chalk from 'chalk'
+import Discord from 'discord.js' // Discord API
+import { REST } from '@discordjs/rest'
+import { timestamp, client } from '../initial.js'
 
 // -------------------------------------------------------------------------------
-
-const deleteSlashCommands: unknown = [];
 
 const commands = [
   new Discord.SlashCommandBuilder()
@@ -34,9 +32,9 @@ const commands = [
     .setName('help')
     .setDescription('Having issues with verification?')
     .setDMPermission(false),
-];
+]
 
-const rest = new REST({ version: '10' }).setToken(process.env.fdVerificationToken!);
+const rest = new REST({ version: '10' }).setToken(process.env.fdVerificationToken!)
 
 rest
   .put(Discord.Routes.applicationCommands(process.env.fdVerificationClientID!), { body: commands })
@@ -47,4 +45,4 @@ rest
       chalk.greenBright(' Successfully registered slash commands')
     )
   )
-  .catch(console.error);
+  .catch(console.error)
