@@ -226,16 +226,16 @@ export const embed: any = {
     interaction: any,
     guildID: string,
     status: string,
-    age: string,
-    invite: string,
+    _age: string,
+    _invite: string,
     userCheck1: string,
     userCheck2: string,
     userCheck3: string,
-    response1: string,
-    response2: string,
-    response3: string,
-    response4: string,
-    response5: string
+    _response1: string,
+    _response2: string,
+    _response3: string,
+    _response4: string,
+    _response5: string
   ) =>
     new Discord.EmbedBuilder()
       .setColor(0xeb716f)

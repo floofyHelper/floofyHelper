@@ -20,7 +20,7 @@
 
 - Use `npx depcheck` to see unused dependencies
 - `./app/index` needs working
-- Add a proof function to the ban feature, you can add a image to provide as proof and it logs the image with the ban
+- Add a proof function to the ban feature, you can add an image to provide as proof and it logs the image with the ban
 
 #### Features to add
 
@@ -34,11 +34,11 @@ Floofy Helper
 Floofy Helper+
 
 - Channel Stats
-- Github Updates
+  GitHub Updates
 - Inspiration Quotes
 - Tags
 
-#### What I last did cause i cant remember for shit
+#### What I last did cause I can't remember for shit
 
 - ✨something✨
 -

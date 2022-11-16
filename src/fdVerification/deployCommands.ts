@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import Discord from 'discord.js'; // Discord API
 import { REST } from '@discordjs/rest';
-import { timestamp, config as client } from '../initial.js';
+import { timestamp, client } from '../initial.js';
 
 // -------------------------------------------------------------------------------
 
@@ -36,9 +36,7 @@ const commands = [
     .setDMPermission(false),
 ];
 
-const rest = new REST({ version: config.discordAPIVersion }).setToken(
-  process.env.fdVerificationToken!
-);
+const rest = new REST({ version: '10' }).setToken(process.env.fdVerificationToken!);
 
 rest
   .put(Discord.Routes.applicationCommands(process.env.fdVerificationClientID!), { body: commands })
