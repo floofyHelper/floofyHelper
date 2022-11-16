@@ -1,14 +1,18 @@
-import chalk from "chalk";
-import Discord from "discord.js"; // Discord API
-import { REST } from "@discordjs/rest";
-import { timestamp, config, client2 as client } from "../initial.js";
-
+"use strict";
+var __importDefault =
+  (this && this.__importDefault) ||
+  function (mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
+Object.defineProperty(exports, "__esModule", { value: true });
+const chalk_1 = __importDefault(require("chalk"));
+const discord_js_1 = __importDefault(require("discord.js")); // Discord API
+const rest_1 = require("@discordjs/rest");
+const initial_js_1 = require("../initial.js");
 // -------------------------------------------------------------------------------
-
-const deleteSlashCommands: unknown = [];
-
+const deleteSlashCommands = [];
 const commands = [
-  new Discord.SlashCommandBuilder()
+  new discord_js_1.default.SlashCommandBuilder()
     /* Staff / Commands */
     .setName("staff")
     .setDescription("All staff commands for verification")
@@ -31,27 +35,26 @@ const commands = [
             )
         )
     ),
-
-  new Discord.SlashCommandBuilder()
+  new discord_js_1.default.SlashCommandBuilder()
     .setName("help")
     .setDescription("Having issues with verification?")
     .setDMPermission(false),
 ];
-
-const rest = new REST({ version: config.discordAPIVersion }).setToken(
-  process.env.fdVerificationToken!
-);
-
+const rest = new rest_1.REST({
+  version: initial_js_1.config.discordAPIVersion,
+}).setToken(process.env.fdVerificationToken);
 rest
   .put(
-    Discord.Routes.applicationCommands(process.env.fdVerificationClientID!),
+    discord_js_1.default.Routes.applicationCommands(
+      process.env.fdVerificationClientID
+    ),
     { body: commands }
   )
   .then(() =>
     console.log(
-      chalk.white(timestamp),
-      chalk.underline.blueBright(client.user?.username),
-      chalk.greenBright(" Successfully registered slash commands")
+      chalk_1.default.white(initial_js_1.timestamp),
+      chalk_1.default.underline.blueBright(initial_js_1.client2.user?.username),
+      chalk_1.default.greenBright(" Successfully registered slash commands")
     )
   )
   .catch(console.error);

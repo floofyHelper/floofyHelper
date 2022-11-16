@@ -18,27 +18,27 @@
 
 ### Dev Notes
 
--   Use `npx depcheck` to see unused dependencies
--   `./app/index` needs working
--   Add a proof function to the ban feature, you can add a image to provide as proof and it logs the image with the ban
+- Use `npx depcheck` to see unused dependencies
+- `./app/index` needs working
+- Add a proof function to the ban feature, you can add a image to provide as proof and it logs the image with the ban
 
 #### Features to add
 
 Floofy Helper
 
--   NSFW Automod ( dependency installed [nsfwjs])
--   TempVC
--   XP System
--   Music Bot
+- NSFW Automod ( dependency installed [nsfwjs])
+- TempVC
+- XP System
+- Music Bot
 
 Floofy Helper+
 
--   Channel Stats
--   Github Updates
--   Inspiration Quotes
--   Tags
+- Channel Stats
+- Github Updates
+- Inspiration Quotes
+- Tags
 
 #### What I last did cause i cant remember for shit
 
--   ✨something✨
+- ✨something✨
 -
