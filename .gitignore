@@ -1,10 +1,12 @@
 # Dev files
 .vscode/
 .husky/
+package-lock.json
 
 # .env Files
 .env*
-!.env.example
+!.env.project
+!.env.vault
 .flaskenv*
 
 # Logs

@@ -1,6 +1,7 @@
 # Dev files
 .vscode/
 .husky/
+package-lock.json
 
 # .env Files
 .env*
