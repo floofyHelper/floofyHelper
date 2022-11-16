@@ -25,7 +25,7 @@
     "stop-discord-phishing": "^0.3.1"
   },
   "devDependencies": {
-    "@types/inquirer": "^9.0.2",
+    "@types/inquirer": "^9.0.3",
     "@types/node": "^18.11.9",
     "husky": "^8.0.1",
     "prettier": "2.7.1",
