@@ -1,20 +1,13 @@
-import chalk from "chalk";
-import {
-  timestamp,
-  config,
-  client2 as client,
-  client3 as data,
-} from "../initial.js";
+import chalk from 'chalk';
+import { timestamp, client2 as client, client3 as data } from '../initial.js';
 console.log(
   chalk.white(timestamp),
-  chalk.underline.magentaBright("Startup"),
+  chalk.underline.magentaBright('Startup'),
   ` ${client.user?.username} files found, starting bot...`
 );
-import Discord from "discord.js"; // Discord API
-import { button, embed, modal } from "./components.js";
-import { ObjectId } from "mongodb";
-import { ObjectID } from "bson";
-import("./deployCommands.js");
+import Discord from 'discord.js'; // Discord API
+import { button, embed, modal } from './components.js';
+import('./deployCommands.js');
 
 // -------------------------------------------------------------------------------
 
@@ -22,7 +15,7 @@ function consoleLogError(err: any) {
   console.error(
     chalk.white(timestamp),
     chalk.underline.blueBright(client.user?.username),
-    " ",
+    ' ',
     err
   );
 }
@@ -45,10 +38,7 @@ async function forumCheckForExistingThreadThenLog(
       const isAuthor = collection.threads.some((array: any) => {
         return array.ownerId === threadAuthorId;
       });
-      if (
-        thread === undefined ||
-        (thread instanceof Object === true && isAuthor === false)
-      ) {
+      if (thread === undefined || (thread instanceof Object === true && isAuthor === false)) {
         await channel.threads.create({
           name: threadName,
           message: {
@@ -85,11 +75,11 @@ async function sendToErrorLog(err: any, interaction: any) {
     // Log error in error logging channel
     await forumCheckForExistingThreadThenLog(
       process.env.errorLog!,
-      "989979801894912040", // CHANGE TO MAIN BOT ID BEFORE STAGING
-      "🛑 Error Log",
-      "## <:myBots:1001930208393314334> This channel is used to inform devs of errors with <@!953794936736727110>\n\n- Follow this channel to receive alerts",
+      '989979801894912040', // CHANGE TO MAIN BOT ID BEFORE STAGING
+      '🛑 Error Log',
+      '## <:myBots:1001930208393314334> This channel is used to inform devs of errors with <@!953794936736727110>\n\n- Follow this channel to receive alerts',
       {
-        content: "||<@&1038965218581160006>||",
+        content: '||<@&1038965218581160006>||',
         embeds: [embed.errorLog(err)],
       }
     );
@@ -102,28 +92,19 @@ async function sendToErrorLog(err: any, interaction: any) {
 
 // -------------------------------------------------------------------------------
 
-client.on("guildMemberAdd", async (member) => {
+client.on('guildMemberAdd', async member => {
   try {
-    if (member.guild.id === "943404593105231882")
-      return; /* REMOVE THIS BEFORE STAGING */
+    if (member.guild.id === '943404593105231882') return; /* REMOVE THIS BEFORE STAGING */
     if (member.user.bot === true) return;
     const buttons: any = button.verification(member.guild.id);
-    buttons.components[0]
-      .setDisabled(false)
-      .setStyle(Discord.ButtonStyle.Secondary);
-    buttons.components[1]
-      .setDisabled(false)
-      .setStyle(Discord.ButtonStyle.Secondary);
-    buttons.components[2]
-      .setDisabled(false)
-      .setStyle(Discord.ButtonStyle.Secondary);
-    buttons.components[3]
-      .setDisabled(false)
-      .setStyle(Discord.ButtonStyle.Secondary);
+    buttons.components[0].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
+    buttons.components[1].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
+    buttons.components[2].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
+    buttons.components[3].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
     // Adding guild & verification data to database
     await data
-      .db("BaseInteraction")
-      .collection("guild")
+      .db('BaseInteraction')
+      .collection('guild')
       .updateOne(
         { _id: member.guild.id },
         {
@@ -148,28 +129,24 @@ client.on("guildMemberAdd", async (member) => {
   }
 });
 
-client.on("interactionCreate", async (interaction) => {
+client.on('interactionCreate', async interaction => {
   if (!interaction.isButton()) return;
   try {
-    if (interaction.customId.startsWith("verification1 1")) {
+    if (interaction.customId.startsWith('verification1 1')) {
       console.log(interaction);
       interaction.message.delete();
       await interaction.user.send({
         embeds: [embed.under13],
         components: [button.under13],
       });
-      const guildId: any = interaction.customId.split(",").at(1);
+      const guildId: any = interaction.customId.split(',').at(1);
       await interaction.client.guilds.cache
         .get(guildId)
         ?.members.kick(
           `${interaction.user.id}`,
-          `User is under 13 | ${
-            interaction.client.guilds.cache.get(guildId)?.name
-          }`
+          `User is under 13 | ${interaction.client.guilds.cache.get(guildId)?.name}`
         );
-      const channel: any = client.channels.cache.get(
-        config.testing.verificationChannel
-      );
+      const channel: any = client.channels.cache.get(config.testing.verificationChannel);
       if (channel?.isTextBased()) {
         await channel.send({
           embeds: [embed.verificationReview(interaction, guildId)],
@@ -177,46 +154,46 @@ client.on("interactionCreate", async (interaction) => {
       }
     }
 
-    if (interaction.customId.startsWith("verification1 2")) {
-      const Id: any = interaction.customId.split(",");
+    if (interaction.customId.startsWith('verification1 2')) {
+      const Id: any = interaction.customId.split(',');
       Id.shift();
       Id.push(`2,${interaction.message.id}`);
       await interaction.showModal(modal.verification(Id));
     }
 
-    if (interaction.customId.startsWith("verification1 3")) {
-      const Id: any = interaction.customId.split(",");
+    if (interaction.customId.startsWith('verification1 3')) {
+      const Id: any = interaction.customId.split(',');
       Id.shift();
       Id.push(`3,${interaction.message.id}`);
       await interaction.showModal(modal.verification(Id));
     }
 
-    if (interaction.customId.startsWith("verification1 4")) {
-      const Id: any = interaction.customId.split(",");
+    if (interaction.customId.startsWith('verification1 4')) {
+      const Id: any = interaction.customId.split(',');
       Id.shift();
       Id.push(`4,${interaction.message.id}`);
       await interaction.showModal(modal.verification(Id));
     }
 
-    if (interaction.customId.startsWith("verification2 1")) {
+    if (interaction.customId.startsWith('verification2 1')) {
       await interaction.deferUpdate();
       const message = client.users.cache
         .get(interaction.user.id)
-        ?.dmChannel?.messages.cache.get(interaction.customId.split(",").at(3)!);
+        ?.dmChannel?.messages.cache.get(interaction.customId.split(',').at(3)!);
       await interaction.message.delete();
       await message?.delete();
       // Age
       let age = undefined;
-      if (interaction.customId.split(",").at(2) === "2") {
-        age = "13-15";
+      if (interaction.customId.split(',').at(2) === '2') {
+        age = '13-15';
       }
-      if (interaction.customId.split(",").at(2) === "3") {
-        age = "16-17";
+      if (interaction.customId.split(',').at(2) === '3') {
+        age = '16-17';
       }
-      if (interaction.customId.split(",").at(2) === "4") {
-        age = "18+";
+      if (interaction.customId.split(',').at(2) === '4') {
+        age = '18+';
       }
-      const guildId: any = interaction.customId.split(",").at(1);
+      const guildId: any = interaction.customId.split(',').at(1);
       /*await data
 				.db('BaseInteraction')
 				.collection('guild')
@@ -226,15 +203,13 @@ client.on("interactionCreate", async (interaction) => {
 				})*/
       // SENDING EMBED TO VERIFICATION CHANNEL
       const channelId = await data
-        .db("BaseInteraction")
-        .collection("guild")
+        .db('BaseInteraction')
+        .collection('guild')
         .findOne({
           _id: guildId,
         })
-        .then((data) => {
-          console.log(
-            data?.verification /*Dont know what to do after this point*/
-          );
+        .then((data: any) => {
+          console.log(data?.verification /*Dont know what to do after this point*/);
         });
 
       //await channelId.forEach(console.dir)
@@ -245,43 +220,33 @@ client.on("interactionCreate", async (interaction) => {
 			})*/
     }
 
-    if (interaction.customId.startsWith("verification2 2")) {
+    if (interaction.customId.startsWith('verification2 2')) {
       if (interaction.user.bot === false) {
         await interaction.deferUpdate();
-        const id: any = interaction.customId.split(",").at(1);
+        const id: any = interaction.customId.split(',').at(1);
         const buttons: any = button.verification(id);
-        buttons.components[0]
-          .setDisabled(false)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        buttons.components[1]
-          .setDisabled(false)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        buttons.components[2]
-          .setDisabled(false)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        buttons.components[3]
-          .setDisabled(false)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        const id2: any = interaction.customId.split(",").at(3);
+        buttons.components[0].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
+        buttons.components[1].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
+        buttons.components[2].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
+        buttons.components[3].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
+        const id2: any = interaction.customId.split(',').at(3);
         const message: any = client.users.cache
           .get(interaction.user.id)
           ?.dmChannel?.messages.cache.get(id2!);
         await interaction.message.delete();
         await message?.delete();
         await interaction.user.send({
-          embeds: [
-            embed.verification(interaction.user, client.guilds.cache.get(id)),
-          ],
+          embeds: [embed.verification(interaction.user, client.guilds.cache.get(id))],
           components: [buttons],
         });
       }
     }
 
-    if (interaction.customId === "verificationHelp 1") {
+    if (interaction.customId === 'verificationHelp 1') {
       await interaction.showModal(modal.ticket);
     }
 
-    if (interaction.customId === "verificationHelp 2") {
+    if (interaction.customId === 'verificationHelp 2') {
       if (interaction.user.bot === false) {
         button.verification.components[0]
           .setDisabled(false)
@@ -310,73 +275,47 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
-client.on("interactionCreate", async (interaction) => {
+client.on('interactionCreate', async interaction => {
   if (interaction.type !== Discord.InteractionType.ModalSubmit) return;
   try {
-    if (interaction.customId.startsWith("verification1")) {
+    if (interaction.customId.startsWith('verification1')) {
       const buttons: any = button.verification();
-      if (interaction.customId.split(",").at(2) === "2") {
-        buttons.components[0]
-          .setDisabled(true)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        buttons.components[1]
-          .setDisabled(true)
-          .setStyle(Discord.ButtonStyle.Primary);
-        buttons.components[2]
-          .setDisabled(true)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        buttons.components[3]
-          .setDisabled(true)
-          .setStyle(Discord.ButtonStyle.Secondary);
+      if (interaction.customId.split(',').at(2) === '2') {
+        buttons.components[0].setDisabled(true).setStyle(Discord.ButtonStyle.Secondary);
+        buttons.components[1].setDisabled(true).setStyle(Discord.ButtonStyle.Primary);
+        buttons.components[2].setDisabled(true).setStyle(Discord.ButtonStyle.Secondary);
+        buttons.components[3].setDisabled(true).setStyle(Discord.ButtonStyle.Secondary);
         if (interaction.isFromMessage()) {
           interaction.update({
             components: [buttons],
           });
         }
       }
-      if (interaction.customId.split(",").at(2) === "3") {
-        buttons.components[0]
-          .setDisabled(true)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        buttons.components[1]
-          .setDisabled(true)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        buttons.components[2]
-          .setDisabled(true)
-          .setStyle(Discord.ButtonStyle.Primary);
-        buttons.components[3]
-          .setDisabled(true)
-          .setStyle(Discord.ButtonStyle.Secondary);
+      if (interaction.customId.split(',').at(2) === '3') {
+        buttons.components[0].setDisabled(true).setStyle(Discord.ButtonStyle.Secondary);
+        buttons.components[1].setDisabled(true).setStyle(Discord.ButtonStyle.Secondary);
+        buttons.components[2].setDisabled(true).setStyle(Discord.ButtonStyle.Primary);
+        buttons.components[3].setDisabled(true).setStyle(Discord.ButtonStyle.Secondary);
         if (interaction.isFromMessage()) {
           interaction.update({
             components: [buttons],
           });
         }
       }
-      if (interaction.customId.split(",").at(2) === "4") {
-        buttons.components[0]
-          .setDisabled(true)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        buttons.components[1]
-          .setDisabled(true)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        buttons.components[2]
-          .setDisabled(true)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        buttons.components[3]
-          .setDisabled(true)
-          .setStyle(Discord.ButtonStyle.Primary);
+      if (interaction.customId.split(',').at(2) === '4') {
+        buttons.components[0].setDisabled(true).setStyle(Discord.ButtonStyle.Secondary);
+        buttons.components[1].setDisabled(true).setStyle(Discord.ButtonStyle.Secondary);
+        buttons.components[2].setDisabled(true).setStyle(Discord.ButtonStyle.Secondary);
+        buttons.components[3].setDisabled(true).setStyle(Discord.ButtonStyle.Primary);
         if (interaction.isFromMessage()) {
           interaction.update({
             components: [buttons],
           });
         }
       }
-      const id: any = interaction.customId.split(",");
+      const id: any = interaction.customId.split(',');
       id.shift();
-      const guildId = client.guilds.cache.get(
-        interaction.customId.split(",").at(1)!
-      );
+      const guildId = client.guilds.cache.get(interaction.customId.split(',').at(1)!);
       interaction.user
         .send({
           embeds: [embed.verification2(interaction, guildId?.iconURL())],
@@ -385,8 +324,8 @@ client.on("interactionCreate", async (interaction) => {
         .catch(console.error);
       // Sending modal submissions to database
       await data
-        .db("BaseInteraction")
-        .collection("guild")
+        .db('BaseInteraction')
+        .collection('guild')
         .updateOne(
           { _id: guildId?.id },
           {
@@ -396,11 +335,11 @@ client.on("interactionCreate", async (interaction) => {
                 [interaction.user.id]: {
                   username: interaction.user.username,
                   modalSubmissions: [
-                    interaction.fields.getTextInputValue("verification1 1"),
-                    interaction.fields.getTextInputValue("verification1 2"),
-                    interaction.fields.getTextInputValue("verification1 3"),
-                    interaction.fields.getTextInputValue("verification1 4"),
-                    interaction.fields.getTextInputValue("verification1 5"),
+                    interaction.fields.getTextInputValue('verification1 1'),
+                    interaction.fields.getTextInputValue('verification1 2'),
+                    interaction.fields.getTextInputValue('verification1 3'),
+                    interaction.fields.getTextInputValue('verification1 4'),
+                    interaction.fields.getTextInputValue('verification1 5'),
                   ],
                 },
               },
@@ -414,11 +353,11 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
-client.on("interactionCreate", async (interaction) => {
+client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
   try {
     const { commandName }: any = interaction;
-    if (commandName === "help") {
+    if (commandName === 'help') {
       await interaction.reply({
         embeds: [embed.verificationHelp(client)],
         components: [button.verificationHelp],
@@ -434,7 +373,7 @@ client.on("interactionCreate", async (interaction) => {
 
 console.log(
   chalk.white(timestamp),
-  chalk.underline.magentaBright("Startup"),
+  chalk.underline.magentaBright('Startup'),
   chalk.greenBright(` ${client.user?.tag} is logged in`)
 );
 /*client.user?.setPresence({
