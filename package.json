@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "src/build/initial.js",
   "license": "AGPL-3.0",
-  "type": "module",
   "scripts": {
     "start": "tsc && node . ",
     "test": "tsc && node --trace-warnings . dev ",

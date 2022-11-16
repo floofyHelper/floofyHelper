@@ -1,4 +1,4 @@
-import Discord, { ModalActionRowComponentBuilder } from "discord.js";
+import Discord, { ModalActionRowComponentBuilder } from 'discord.js';
 
 // -------------------------------------------------------------------------------
 
@@ -7,8 +7,8 @@ export const button: any = {
   error: new Discord.ActionRowBuilder() //
     .addComponents(
       new Discord.ButtonBuilder()
-        .setLabel("Support Server")
-        .setURL("https://discord.gg/hRmjAUvrpT")
+        .setLabel('Support Server')
+        .setURL('https://discord.gg/hRmjAUvrpT')
         .setStyle(Discord.ButtonStyle.Link)
     ),
 
@@ -17,25 +17,25 @@ export const button: any = {
       .addComponents(
         new Discord.ButtonBuilder()
           .setCustomId(`verification1 1,${guildId}`)
-          .setLabel("Under 13")
+          .setLabel('Under 13')
           .setStyle(Discord.ButtonStyle.Secondary)
       )
       .addComponents(
         new Discord.ButtonBuilder()
           .setCustomId(`verification1 2,${guildId}`)
-          .setLabel("13-15")
+          .setLabel('13-15')
           .setStyle(Discord.ButtonStyle.Secondary)
       )
       .addComponents(
         new Discord.ButtonBuilder()
           .setCustomId(`verification1 3,${guildId}`)
-          .setLabel("16-17")
+          .setLabel('16-17')
           .setStyle(Discord.ButtonStyle.Secondary)
       )
       .addComponents(
         new Discord.ButtonBuilder()
           .setCustomId(`verification1 4,${guildId}`)
-          .setLabel("18+")
+          .setLabel('18+')
           .setStyle(Discord.ButtonStyle.Secondary)
       ),
 
@@ -44,64 +44,64 @@ export const button: any = {
       .addComponents(
         new Discord.ButtonBuilder()
           .setCustomId(`verification2 1,${guildId}`)
-          .setLabel("Submit")
+          .setLabel('Submit')
           .setStyle(Discord.ButtonStyle.Secondary)
       )
       .addComponents(
         new Discord.ButtonBuilder()
           .setCustomId(`verification2 2,${guildId}`)
-          .setLabel("Restart")
+          .setLabel('Restart')
           .setStyle(Discord.ButtonStyle.Secondary)
       ),
 
   under13: new Discord.ActionRowBuilder() //
     .addComponents(
       new Discord.ButtonBuilder()
-        .setLabel("Discord Age Requirements")
-        .setURL("https://discord.com/terms#2")
+        .setLabel('Discord Age Requirements')
+        .setURL('https://discord.com/terms#2')
         .setStyle(Discord.ButtonStyle.Link)
     ),
 
   verificationReview: new Discord.ActionRowBuilder() //
     .addComponents(
       new Discord.ButtonBuilder()
-        .setCustomId("verificationReview 1")
-        .setLabel("Approve")
+        .setCustomId('verificationReview 1')
+        .setLabel('Approve')
         .setStyle(Discord.ButtonStyle.Success)
     )
     .addComponents(
       new Discord.ButtonBuilder()
-        .setCustomId("verificationReview 2")
-        .setLabel("Deny")
+        .setCustomId('verificationReview 2')
+        .setLabel('Deny')
         .setStyle(Discord.ButtonStyle.Danger)
     )
     .addComponents(
       new Discord.ButtonBuilder()
-        .setCustomId("verificationReview 3")
-        .setLabel("Question")
+        .setCustomId('verificationReview 3')
+        .setLabel('Question')
         .setStyle(Discord.ButtonStyle.Secondary)
     )
     .addComponents(
       new Discord.ButtonBuilder()
-        .setCustomId("verificationReview 4")
-        .setLabel("More Options")
+        .setCustomId('verificationReview 4')
+        .setLabel('More Options')
         .setStyle(Discord.ButtonStyle.Secondary)
     ),
 
   verificationHelp: new Discord.ActionRowBuilder() //
     .addComponents(
       new Discord.ButtonBuilder()
-        .setCustomId("verificationHelp 1")
-        .setLabel("Open a Ticket")
+        .setCustomId('verificationHelp 1')
+        .setLabel('Open a Ticket')
         .setStyle(Discord.ButtonStyle.Primary)
-        .setEmoji("🎟️")
+        .setEmoji('🎟️')
     )
     .addComponents(
       new Discord.ButtonBuilder()
-        .setCustomId("verificationHelp 2")
-        .setLabel("Resend Verification")
+        .setCustomId('verificationHelp 2')
+        .setLabel('Resend Verification')
         .setStyle(Discord.ButtonStyle.Secondary)
-        .setEmoji("📨")
+        .setEmoji('📨')
     ),
 };
 
@@ -112,18 +112,18 @@ export const embed: any = {
   error: new Discord.EmbedBuilder() //
     .setColor(0xeb716f)
     .setAuthor({
-      name: "Something went wrong!",
+      name: 'Something went wrong!',
       iconURL:
-        "https://cdn.discordapp.com/emojis/1015719863446151198.webp?size=240&quality=lossless",
+        'https://cdn.discordapp.com/emojis/1015719863446151198.webp?size=240&quality=lossless',
     }),
 
   errorLog: (errorReason: any) =>
     new Discord.EmbedBuilder() //
       .setColor(0xeb716f)
       .setAuthor({
-        name: "Floofy Helper has had an error!",
+        name: 'Floofy Helper has had an error!',
         iconURL:
-          "https://cdn.discordapp.com/emojis/1015719863446151198.webp?size=240&quality=lossless",
+          'https://cdn.discordapp.com/emojis/1015719863446151198.webp?size=240&quality=lossless',
       })
       .setDescription(
         `> [<:status:975961724844924998> **Server Dashboard**](https://panel.wepwawet.net/server/bace9647)\n> [<:database:1033062779353051167> **MongoDB Atlas**](https://cloud.mongodb.com/v2/635185f826f2024f64a1ec28#clusters)\n> [<:github:1033062780372271104> **Github Repo**](https://github.com/floofyHelper)\n\`\`\`ts\n${errorReason}\`\`\``
@@ -143,29 +143,29 @@ export const embed: any = {
   verification2: (interaction: any, guildIcon: any) =>
     new Discord.EmbedBuilder()
       .setAuthor({
-        name: "Look over your application, want to change anything?",
+        name: 'Look over your application, want to change anything?',
         iconURL: `${guildIcon}`,
       })
       .addFields(
         {
-          name: "How did you find us?",
-          value: `> ${interaction.fields.getTextInputValue("verification1 1")}`,
+          name: 'How did you find us?',
+          value: `> ${interaction.fields.getTextInputValue('verification1 1')}`,
         },
         {
-          name: "Why did you join our server?",
-          value: `> ${interaction.fields.getTextInputValue("verification1 2")}`,
+          name: 'Why did you join our server?',
+          value: `> ${interaction.fields.getTextInputValue('verification1 2')}`,
         },
         {
-          name: "Tell us a bit about yourself!",
-          value: `> ${interaction.fields.getTextInputValue("verification1 3")}`,
+          name: 'Tell us a bit about yourself!',
+          value: `> ${interaction.fields.getTextInputValue('verification1 3')}`,
         },
         {
-          name: "Have a fursona? Tell us about it!",
-          value: `> ${interaction.fields.getTextInputValue("verification1 4")}`,
+          name: 'Have a fursona? Tell us about it!',
+          value: `> ${interaction.fields.getTextInputValue('verification1 4')}`,
         },
         {
-          name: "Have you read the rules?",
-          value: `> ${interaction.fields.getTextInputValue("verification1 5")}`,
+          name: 'Have you read the rules?',
+          value: `> ${interaction.fields.getTextInputValue('verification1 5')}`,
         }
       ),
 
@@ -174,7 +174,7 @@ export const embed: any = {
     .setAuthor({
       name: "As per Discord's ToS, you must be at least 13 years old to join this server.",
       iconURL:
-        "https://cdn.discordapp.com/emojis/1015719863446151198.webp?size=240&quality=lossless",
+        'https://cdn.discordapp.com/emojis/1015719863446151198.webp?size=240&quality=lossless',
     }),
 
   verificationApplicationSuccess: (
@@ -188,36 +188,36 @@ export const embed: any = {
     new Discord.EmbedBuilder() //
       .setColor(0x69d09a)
       .setAuthor({
-        name: "Verification application sent!",
+        name: 'Verification application sent!',
         iconURL:
-          "https://cdn.discordapp.com/emojis/1015719865572667625.webp?size=96&quality=lossless",
+          'https://cdn.discordapp.com/emojis/1015719865572667625.webp?size=96&quality=lossless',
       })
       .setDescription(
         "> All verification applications are reviewed manually by our staff, so sometimes it can take a while. **Usually, people are verified within 2 days.** *Please don't ping staff/open tickets about verifying you.*"
       )
       .addFields(
         {
-          name: "Age:",
+          name: 'Age:',
           value: `> ${age}`,
         },
         {
-          name: "How did you find us?",
+          name: 'How did you find us?',
           value: `> ${answer1}`,
         },
         {
-          name: "Why did you join our server?",
+          name: 'Why did you join our server?',
           value: `> ${answer2}`,
         },
         {
-          name: "Tell us a bit about yourself!",
+          name: 'Tell us a bit about yourself!',
           value: `> ${answer3}`,
         },
         {
-          name: "Have a fursona? Tell us about it!",
+          name: 'Have a fursona? Tell us about it!',
           value: `> ${answer4}`,
         },
         {
-          name: "Have you read the rules?",
+          name: 'Have you read the rules?',
           value: `> ${answer5}`,
         }
       ),
@@ -245,7 +245,7 @@ export const embed: any = {
       })
       .addFields(
         {
-          name: "User Info:",
+          name: 'User Info:',
           value: `> **User Tag:** <@${interaction.user.id}>\n> **User ID:** ||${
             interaction.user.id
           }||\n> **Account Age:** <t:${Math.round(
@@ -257,11 +257,11 @@ export const embed: any = {
 						.at(0)}\n> **Joined From:** ${invite.split(',').at(1)}`*/,
         },
         {
-          name: "User Check:",
+          name: 'User Check:',
           value: `> ${userCheck1}\n> ${userCheck2}\n> ${userCheck3}`,
         },
         {
-          name: "Reason:",
+          name: 'Reason:',
           value: `> User is under 13 (Banned at verification) | ${
             interaction.client.guilds.cache.get(guildID)?.name
           }`,
@@ -274,7 +274,7 @@ export const embed: any = {
     new Discord.EmbedBuilder()
       .addFields(
         {
-          name: "How do I verify?",
+          name: 'How do I verify?',
           value: `> Check for a DM from <@${client.user.id}> and answer the questions provided.`,
         },
         {
@@ -285,11 +285,11 @@ export const embed: any = {
         {
           name: "Didn't receive a DM?",
           value:
-            "> Make sure your DM's are open. Info on how to do so [here](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings-). \n > After you open up your DM's, click the \"Resend Verification\" button.",
+            '> Make sure your DM\'s are open. Info on how to do so [here](https://support.discord.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings-). \n > After you open up your DM\'s, click the "Resend Verification" button.',
         }
       )
       .setFooter({
-        text: "If you're encountering any issues that can't be solved above, click the \"Open a Ticket\" button to talk with staff.",
+        text: 'If you\'re encountering any issues that can\'t be solved above, click the "Open a Ticket" button to talk with staff.',
       }),
 };
 
@@ -298,13 +298,13 @@ export const embed: any = {
 /* Modals */
 export const modal: any = {
   ticket: new Discord.ModalBuilder()
-    .setCustomId("ticket")
-    .setTitle("Open a Ticket")
+    .setCustomId('ticket')
+    .setTitle('Open a Ticket')
     .addComponents(
       new Discord.ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
         new Discord.TextInputBuilder()
-          .setCustomId("ticket1 1")
-          .setLabel("What is the reason for this support ticket?")
+          .setCustomId('ticket1 1')
+          .setLabel('What is the reason for this support ticket?')
           .setPlaceholder("Ex. I'm having issues sending images in media")
           .setStyle(Discord.TextInputStyle.Paragraph)
           .setMaxLength(1024)
@@ -314,49 +314,49 @@ export const modal: any = {
   verification: (Id: any) =>
     new Discord.ModalBuilder()
       .setCustomId(`verification1,${Id}`)
-      .setTitle("Verification Application")
+      .setTitle('Verification Application')
       .addComponents(
         new Discord.ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
           new Discord.TextInputBuilder()
-            .setCustomId("verification1 1")
-            .setLabel("How did you find us?")
-            .setPlaceholder("Ex. I found your server on Disboard")
+            .setCustomId('verification1 1')
+            .setLabel('How did you find us?')
+            .setPlaceholder('Ex. I found your server on Disboard')
             .setStyle(Discord.TextInputStyle.Short)
             .setMaxLength(50)
         ),
         new Discord.ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
           new Discord.TextInputBuilder()
-            .setCustomId("verification1 2")
-            .setLabel("Why did you join our server?")
+            .setCustomId('verification1 2')
+            .setLabel('Why did you join our server?')
             .setPlaceholder(
-              "Ex. I want to join your server so I can socialize with a thriving community"
+              'Ex. I want to join your server so I can socialize with a thriving community'
             )
             .setStyle(Discord.TextInputStyle.Paragraph)
             .setMaxLength(1024)
         ),
         new Discord.ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
           new Discord.TextInputBuilder()
-            .setCustomId("verification1 3")
-            .setLabel("Tell us a bit about yourself!")
+            .setCustomId('verification1 3')
+            .setLabel('Tell us a bit about yourself!')
             .setPlaceholder(
-              "Tell us about your hobbies, interests, and anything else you want to share with us"
+              'Tell us about your hobbies, interests, and anything else you want to share with us'
             )
             .setStyle(Discord.TextInputStyle.Paragraph)
             .setMaxLength(1024)
         ),
         new Discord.ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
           new Discord.TextInputBuilder()
-            .setCustomId("verification1 4")
-            .setLabel("Have a fursona? Tell us about it!")
-            .setPlaceholder("What species is it? Have a ref? ")
+            .setCustomId('verification1 4')
+            .setLabel('Have a fursona? Tell us about it!')
+            .setPlaceholder('What species is it? Have a ref? ')
             .setStyle(Discord.TextInputStyle.Paragraph)
             .setRequired(false)
             .setMaxLength(1024)
         ),
         new Discord.ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
           new Discord.TextInputBuilder()
-            .setCustomId("verification1 5")
-            .setLabel("Have you read the rules?")
+            .setCustomId('verification1 5')
+            .setLabel('Have you read the rules?')
             .setStyle(Discord.TextInputStyle.Short)
             .setMaxLength(3)
         )

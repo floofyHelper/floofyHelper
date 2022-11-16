@@ -1,3 +1,11 @@
+# Dev files
+.vscode/
+.husky/
+
+# .env Files
+.env*
+.flaskenv*
+
 # Logs
 logs
 *.log
@@ -37,6 +45,9 @@ bower_components
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
+
+# Javascript compiled files
+build/
 
 # Dependency directories
 node_modules/

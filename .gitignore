@@ -1,14 +1,9 @@
-.vscode/settings.json
-node_modules
-src/build/**
-src/test/**
-.DS_Store
-.eslintcache
+# Dev files
+.vscode/
+.husky/
 
 # .env Files
 .env*
-!.env.project
-!.env.vault
 .flaskenv*
 
 # Logs
@@ -50,6 +45,9 @@ bower_components
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
+
+# Javascript compiled files
+build/
 
 # Dependency directories
 node_modules/
