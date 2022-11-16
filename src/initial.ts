@@ -30,7 +30,7 @@ export const client2 = new Discord.Client({
     Discord.GatewayIntentBits.GuildMessages,
   ],
 })
-export const client3 = await mongoose.connect(process.env.mongoDbUri!) // Configure Database Uri
+export const client3 = mongoose.connect(process.env.mongoDbUri!) // Configure Database Uri
 
 // -------------------------------------------------------------------------------
 
@@ -66,7 +66,7 @@ client.once('ready', () => {
       ])
       .then(answers => {
         if (answers === 'Development') {
-          import('./fdVerification/index.js')
+          import('./index.js')
         } else if (answers === 'Production') {
           inquirer
             .prompt([
@@ -109,8 +109,7 @@ client.once('ready', () => {
                     client.once('shardReady', () => {
                       client2.login(process.env.fdVerificationToken)
                       client2.once('shardReady', () => {
-                        import('./floofyHelper/index.js')
-                        import('./fdVerification/index.js')
+                        import('./index.js')
                         console.log(
                           chalk.white(timestamp),
                           chalk.underline.magentaBright('Startup'),
