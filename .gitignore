@@ -4,6 +4,7 @@
 
 # .env Files
 .env*
+!.env.example
 .flaskenv*
 
 # Logs
