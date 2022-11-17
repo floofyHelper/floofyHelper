@@ -1,4 +1,4 @@
-import Discord, { ModalActionRowComponentBuilder } from 'discord.js'
+import Discord, { ModalActionRowComponentBuilder } from 'discord.js';
 
 // -------------------------------------------------------------------------------
 
@@ -103,7 +103,7 @@ export const button: any = {
         .setStyle(Discord.ButtonStyle.Secondary)
         .setEmoji('📨')
     ),
-}
+};
 
 // -------------------------------------------------------------------------------
 
@@ -291,7 +291,7 @@ export const embed: any = {
       .setFooter({
         text: 'If you\'re encountering any issues that can\'t be solved above, click the "Open a Ticket" button to talk with staff.',
       }),
-}
+};
 
 // -------------------------------------------------------------------------------
 
@@ -361,14 +361,14 @@ export const modal: any = {
             .setMaxLength(3)
         )
       ),
-}
+};
 
 // -------------------------------------------------------------------------------
 
 /* Select Menus */
-export const selectMenu: any = {}
+export const selectMenu: any = {};
 
 // -------------------------------------------------------------------------------
 
 /* Webhooks */
-export const webhook: any = {}
+export const webhook: any = {};
