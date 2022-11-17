@@ -10,6 +10,13 @@ import { button, embed, modal } from './components.js'
 import('./deployCommands.js')
 
 // -------------------------------------------------------------------------------
+function getTimestamp() {
+  const date = new Date()
+  const pad = (value: number) => value.toString().padStart(2, '0')
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
+}
+
+console.log(getTimestamp())
 
 function consoleLogError(err: any) {
   console.error(chalk.white(timestamp), chalk.underline.blueBright(client.user?.username), ' ', err)
@@ -178,7 +185,7 @@ client.on('interactionCreate', async interaction => {
       await interaction.message.delete()
       await message?.delete()
       // Age
-      let age = undefined
+      /*let age = undefined
       if (interaction.customId.split(',').at(2) === '2') {
         age = '13-15'
       }
@@ -187,7 +194,7 @@ client.on('interactionCreate', async interaction => {
       }
       if (interaction.customId.split(',').at(2) === '4') {
         age = '18+'
-      }
+      }*/
     }
 
     if (interaction.customId.startsWith('verification2 2')) {

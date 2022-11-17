@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./build",
-    "target": "ES2017",
-    "module": "ES2022",
+    "rootDir": "./src/",
+    "outDir": "./build/",
+    "target": "ES2022",
+    "module": "CommonJS",
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -11,6 +11,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "strict": false,
-    "incremental": true
+    "incremental": false
   }
 }
