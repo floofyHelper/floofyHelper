@@ -40,7 +40,7 @@ rest
   .put(Discord.Routes.applicationCommands(process.env.fdVerificationClientID!), { body: commands })
   .then(() =>
     console.log(
-      chalk.white(timestamp),
+      chalk.white(timestamp()),
       chalk.underline.blueBright(client.user?.username),
       chalk.greenBright(' Successfully registered slash commands')
     )
