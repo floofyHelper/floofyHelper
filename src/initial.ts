@@ -6,13 +6,14 @@ import * as dotenv from 'dotenv'; // .env File
 
 chalk.level = 3; // Configuring Chalk
 dotenv.config({ path: '.env' }); // Configuring Dotenv
+const { BOT_TOKEN } = process.env;
 export function timestamp() {
   // Timestamps for CLI
   const date = new Date();
   const pad = (value: number) => value.toString().padStart(2, '0');
-  return `${pad(date.getMonth())}-${pad(date.getDate())}-${pad(date.getFullYear())} ${pad(
-    date.getHours()
-  )}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  return `${pad(date.getUTCMonth())}-${pad(date.getUTCDate())}-${pad(date.getUTCFullYear())} ${pad(
+    date.getUTCHours()
+  )}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}`;
 }
 export const client = new Discord.Client({
   // Configure Main Bot Permissions
@@ -45,7 +46,7 @@ console.log(
   chalk.underline.magentaBright('Startup'),
   ' Booting & connecting to database...'
 );
-client.login(process.env.floofyHelperToken);
+client.login(BOT_TOKEN);
 client.once('ready', () => {
   import('./index.js');
 });
