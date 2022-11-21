@@ -1,12 +1,12 @@
-import chalk from 'chalk'; // CLI Colors
-import Discord from 'discord.js'; // Discord API
-import * as dotenv from 'dotenv'; // .env File
+import './dotenv/config.js';
+
+import chalk from 'chalk';
+import Discord from 'discord.js';
+import * as Sentry from '@sentry/node';
 
 // -------------------------------------------------------------------------------
 
 chalk.level = 3; // Configuring Chalk
-dotenv.config({ path: '.env' }); // Configuring Dotenv
-const { BOT_TOKEN } = process.env;
 export function timestamp() {
   // Timestamps for CLI
   const date = new Date();
@@ -37,16 +37,19 @@ export const client2 = new Discord.Client({
 
 const devMode = process.argv.includes('dev');
 
-if (!devMode) {
-  dotenv.config({ path: '.env.production', override: true });
-}
-
 console.log(
   chalk.white(timestamp()),
   chalk.underline.magentaBright('Startup'),
   ' Booting & connecting to database...'
 );
-client.login(BOT_TOKEN);
+client.login(process.env.BOT_TOKEN);
 client.once('ready', () => {
   import('./index.js');
 });
+
+if (!devMode && process.env.SENTRY_DSN) {
+  Sentry.init({ dsn: process.env.SENTRY_DSN });
+  process.on('unhandledRejection', err => {
+    Sentry.captureException(err);
+  });
+}

@@ -3,8 +3,6 @@ import Discord from 'discord.js'; // Discord API
 import { REST } from '@discordjs/rest';
 import { timestamp, client } from './initial.js';
 
-const { BOT_TOKEN, DISCORD_API_VERSION } = process.env;
-
 // -------------------------------------------------------------------------------
 
 const commands = [
@@ -36,10 +34,12 @@ const commands = [
     .setDMPermission(false),
 ];
 
-const rest = new REST({ version: DISCORD_API_VERSION }).setToken(BOT_TOKEN);
+const rest = new REST({ version: process.env.DISCORD_API_VERSION }).setToken(
+  process.env.BOT_TOKEN!
+);
 
 rest
-  .put(Discord.Routes.applicationCommands(client.user.id), { body: commands })
+  .put(Discord.Routes.applicationCommands(client.user?.id!), { body: commands })
   .then(() =>
     console.log(
       chalk.white(timestamp()),
