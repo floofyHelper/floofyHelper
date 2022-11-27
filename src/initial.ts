@@ -1,20 +1,14 @@
 import './dotenv/config.js';
+import Client from './classes/client.js';
+// @ts-ignore
+import Database from './classes/database.js';
+import Server from './classes/server.js';
 
-import chalk from 'chalk';
 import Discord from 'discord.js';
 import * as Sentry from '@sentry/node';
 
 // -------------------------------------------------------------------------------
 
-chalk.level = 3; // Configuring Chalk
-export function timestamp() {
-  // Timestamps for CLI
-  const date = new Date();
-  const pad = (value: number) => value.toString().padStart(2, '0');
-  return `${pad(date.getUTCMonth())}-${pad(date.getUTCDate())}-${pad(date.getUTCFullYear())} ${pad(
-    date.getUTCHours()
-  )}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}`;
-}
 export const client = new Discord.Client({
   // Configure Main Bot Permissions
   intents: [
@@ -35,17 +29,22 @@ export const client2 = new Discord.Client({
 
 // -------------------------------------------------------------------------------
 
+const { BOT_APPLICATION_ID, BOT_PUBLIC_KEY, BOT_TOKEN } = process.env;
 const devMode = process.argv.includes('dev');
 
-console.log(
-  chalk.white(timestamp()),
-  chalk.underline.magentaBright('Startup'),
-  ' Booting & connecting to database...'
-);
-client.login(process.env.BOT_TOKEN);
-client.once('ready', () => {
-  import('./index.js');
-});
+const database = new Database();
+
+const clients = [];
+if (BOT_TOKEN && BOT_PUBLIC_KEY && BOT_APPLICATION_ID)
+  clients.push(
+    new Client({
+      applicationId: BOT_APPLICATION_ID,
+      publicKey: BOT_PUBLIC_KEY,
+      token: BOT_TOKEN,
+    })
+  );
+
+const server = new Server(clients, database);
 
 if (!devMode && process.env.SENTRY_DSN) {
   Sentry.init({ dsn: process.env.SENTRY_DSN });
@@ -53,3 +52,5 @@ if (!devMode && process.env.SENTRY_DSN) {
     Sentry.captureException(err);
   });
 }
+
+server.start();

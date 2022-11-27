@@ -1,102 +1,22 @@
-import chalk from 'chalk';
-import { timestamp, client } from './initial.js';
-console.log(
-  chalk.white(timestamp()),
-  chalk.underline.magentaBright('Startup'),
-  ` ${client.user?.username} files found, starting bot...`
-);
 import Discord from 'discord.js'; // Discord API
-import { button, embed, modal } from './components.js';
 import('./deployCommands.js');
+import * as functions from './functions.js';
+
+import Client, { client } from './classes/client.js';
+import Logger from './classes/logger.js';
+
+const embed = Client.embed;
+const button = Client.button;
+const modal = Client.modal;
 
 // -------------------------------------------------------------------------------
-
-function consoleLogError(err: any) {
-  console.error(
-    chalk.white(timestamp()),
-    chalk.underline.blueBright(client.user?.username),
-    ' ',
-    err
-  );
-}
-
-async function forumCheckForExistingThreadThenLog(
-  forumChannelId: string,
-  threadAuthorId: string,
-  threadName: string,
-  threadDescription: string,
-  messageComponents: any
-) {
-  try {
-    // Checks to see if there is an already existing forum thread. If not, create one
-    const channel: any = client.channels.cache.get(forumChannelId);
-    channel.threads.fetch().then(async (collection: any) => {
-      if (client.user?.id !== threadAuthorId) return;
-      const thread = collection.threads.find((array: any) => {
-        return array.name === threadName;
-      });
-      const isAuthor = collection.threads.some((array: any) => {
-        return array.ownerId === threadAuthorId;
-      });
-      if (thread === undefined || (thread instanceof Object === true && isAuthor === false)) {
-        await channel.threads.create({
-          name: threadName,
-          message: {
-            content: threadDescription,
-          },
-        });
-      }
-      // Log message in channel
-      channel.threads.fetch().then(async (collection: any, thread: any) => {
-        if (client.user?.id !== threadAuthorId) return;
-        const newCollection = collection.threads.find((array: any) => {
-          return array.name === threadName;
-        });
-        if (thread === undefined) {
-          await newCollection.send(messageComponents);
-        } else {
-          await thread.send(messageComponents);
-        }
-      });
-    });
-  } catch (err) {
-    consoleLogError(err);
-  }
-}
-
-async function sendToErrorLog(err: any, interaction: any) {
-  try {
-    // Send error embed to user
-    await interaction.user.send({
-      embeds: [embed.error],
-      components: [button.error],
-      ephemeral: true,
-    });
-    // Log error in error logging channel
-    await forumCheckForExistingThreadThenLog(
-      process.env.errorLog!,
-      '989979801894912040', // CHANGE TO MAIN BOT ID BEFORE STAGING
-      '🛑 Error Log',
-      '## <:myBots:1001930208393314334> This channel is used to inform devs of errors with <@!953794936736727110>\n\n- Follow this channel to receive alerts',
-      {
-        content: '||<@&1038965218581160006>||',
-        embeds: [embed.errorLog(err)],
-      }
-    );
-    // Log error in console
-    consoleLogError(err);
-  } catch (err) {
-    consoleLogError(err);
-  }
-}
-
 // -------------------------------------------------------------------------------
 
 client.on('guildMemberAdd', async member => {
   try {
     if (member.guild.id === '943404593105231882') return; /* REMOVE THIS BEFORE STAGING */
     if (member.user.bot === true) return;
-    const buttons: any = button.verification(member.guild.id);
+    const buttons = button.verification[1](member.guild.id);
     buttons.components[0].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
     buttons.components[1].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
     buttons.components[2].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
@@ -121,11 +41,11 @@ client.on('guildMemberAdd', async member => {
       );*/
     // Sending first verification embed to user
     await member.send({
-      embeds: [embed.verification(member.user, member.guild)],
+      embeds: [embed.verification[1](member.user, member.guild)],
       components: [buttons],
     });
   } catch (err) {
-    await sendToErrorLog(err, member);
+    await functions.sendToErrorLog(err, member);
   }
 });
 
@@ -136,43 +56,43 @@ client.on('interactionCreate', async interaction => {
       console.log(interaction);
       interaction.message.delete();
       await interaction.user.send({
-        embeds: [embed.under13],
-        components: [button.under13],
+        embeds: [embed.verification.under13],
+        components: [button.verification.under13],
       });
-      const guildId: any = interaction.customId.split(',').at(1);
+      const guildId = interaction.customId.split(',').at(1);
       await interaction.client.guilds.cache
-        .get(guildId)
+        .get(guildId!)
         ?.members.kick(
           `${interaction.user.id}`,
-          `User is under 13 | ${interaction.client.guilds.cache.get(guildId)?.name}`
+          `User is under 13 | ${interaction.client.guilds.cache.get(guildId!)?.name}`
         );
-      const channel: any = client.channels.cache.get('2345342312');
+      const channel = client.channels.cache.get('2345342312');
       if (channel?.isTextBased()) {
-        await channel.send({
-          embeds: [embed.verificationReview(interaction, guildId)],
-        });
+        /*await channel.send({
+          embeds: [embed.verification.review(interaction, guildId)],
+        });*/
       }
     }
 
     if (interaction.customId.startsWith('verification1 2')) {
-      const Id: any = interaction.customId.split(',');
+      const Id = interaction.customId.split(',');
       Id.shift();
       Id.push(`2,${interaction.message.id}`);
-      await interaction.showModal(modal.verification(Id));
+      await interaction.showModal(modal.verification[1](Id));
     }
 
     if (interaction.customId.startsWith('verification1 3')) {
-      const Id: any = interaction.customId.split(',');
+      const Id = interaction.customId.split(',');
       Id.shift();
       Id.push(`3,${interaction.message.id}`);
-      await interaction.showModal(modal.verification(Id));
+      await interaction.showModal(modal.verification[1](Id));
     }
 
     if (interaction.customId.startsWith('verification1 4')) {
-      const Id: any = interaction.customId.split(',');
+      const Id = interaction.customId.split(',');
       Id.shift();
       Id.push(`4,${interaction.message.id}`);
-      await interaction.showModal(modal.verification(Id));
+      await interaction.showModal(modal.verification[1](Id));
     }
 
     if (interaction.customId.startsWith('verification2 1')) {
@@ -198,55 +118,48 @@ client.on('interactionCreate', async interaction => {
     if (interaction.customId.startsWith('verification2 2')) {
       if (interaction.user.bot === false) {
         await interaction.deferUpdate();
-        const id: any = interaction.customId.split(',').at(1);
-        const buttons: any = button.verification(id);
+        const id = interaction.customId.split(',').at(1);
+        const buttons = button.verification[1](id);
         buttons.components[0].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
         buttons.components[1].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
         buttons.components[2].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
         buttons.components[3].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
-        const id2: any = interaction.customId.split(',').at(3);
-        const message: any = client.users.cache
+        const id2 = interaction.customId.split(',').at(3);
+        const message = client.users.cache
           .get(interaction.user.id)
           ?.dmChannel?.messages.cache.get(id2!);
         await interaction.message.delete();
         await message?.delete();
         await interaction.user.send({
-          embeds: [embed.verification(interaction.user, client.guilds.cache.get(id))],
+          embeds: [embed.verification[1](interaction.user, client.guilds.cache.get(id!))],
           components: [buttons],
         });
       }
     }
 
     if (interaction.customId === 'verificationHelp 1') {
-      await interaction.showModal(modal.ticket);
+      await interaction.showModal(modal.ticket[1]);
     }
 
     if (interaction.customId === 'verificationHelp 2') {
       if (interaction.user.bot === false) {
-        button.verification.components[0]
-          .setDisabled(false)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        button.verification.components[1]
-          .setDisabled(false)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        button.verification.components[2]
-          .setDisabled(false)
-          .setStyle(Discord.ButtonStyle.Secondary);
-        button.verification.components[3]
-          .setDisabled(false)
-          .setStyle(Discord.ButtonStyle.Secondary);
+        const buttons = button.verification[1](interaction.guild?.id);
+        buttons.components[0].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
+        buttons.components[1].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
+        buttons.components[2].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
+        buttons.components[3].setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
         await interaction.deferUpdate();
         if (interaction.guild?.name === undefined) {
         } else {
           await interaction.user.send({
-            embeds: [embed.verification(interaction.user, interaction.guild)],
-            components: [button.verification],
+            embeds: [embed.verification[1](interaction.user, interaction.guild)],
+            components: [buttons],
           });
         }
       }
     }
   } catch (err) {
-    await sendToErrorLog(err, interaction);
+    await functions.sendToErrorLog(err, interaction);
   }
 });
 
@@ -254,7 +167,7 @@ client.on('interactionCreate', async interaction => {
   if (interaction.type !== Discord.InteractionType.ModalSubmit) return;
   try {
     if (interaction.customId.startsWith('verification1')) {
-      const buttons: any = button.verification();
+      const buttons = button.verification[1]();
       if (interaction.customId.split(',').at(2) === '2') {
         buttons.components[0].setDisabled(true).setStyle(Discord.ButtonStyle.Secondary);
         buttons.components[1].setDisabled(true).setStyle(Discord.ButtonStyle.Primary);
@@ -288,13 +201,13 @@ client.on('interactionCreate', async interaction => {
           });
         }
       }
-      const id: any = interaction.customId.split(',');
+      const id = interaction.customId.split(',');
       id.shift();
       const guildId = client.guilds.cache.get(interaction.customId.split(',').at(1)!);
       interaction.user
         .send({
-          embeds: [embed.verification2(interaction, guildId?.iconURL())],
-          components: [button.verification2(id)],
+          embeds: [embed.verification[2](interaction, guildId?.iconURL())],
+          components: [button.verification[2](id)],
         })
         .catch(console.error);
       // Sending modal submissions to database
@@ -324,34 +237,26 @@ client.on('interactionCreate', async interaction => {
         );*/
     }
   } catch (err) {
-    await sendToErrorLog(err, interaction);
+    await functions.sendToErrorLog(err, interaction);
   }
 });
 
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
   try {
-    const { commandName }: any = interaction;
+    const { commandName } = interaction;
     if (commandName === 'help') {
       await interaction.reply({
-        embeds: [embed.verificationHelp(client)],
-        components: [button.verificationHelp],
+        embeds: [embed.verification.help(client)],
+        components: [button.verification.help],
         ephemeral: true,
       });
     }
   } catch (err) {
-    await sendToErrorLog(err, interaction);
+    await functions.sendToErrorLog(err, interaction);
   }
 });
 
 // -------------------------------------------------------------------------------
 
-console.log(
-  chalk.white(timestamp()),
-  chalk.underline.magentaBright('Startup'),
-  chalk.greenBright(` ${client.user?.tag} is logged in`)
-);
-/*client.user?.setPresence({
-		activities: [{ name: `${client.guild.memberCount} users`, type: Discord.ActivityType.Watching }],
-		status: 'online',
-	})*/
+new Logger(`${client.user?.username}`).success(`${client.user?.tag} is logged in`);

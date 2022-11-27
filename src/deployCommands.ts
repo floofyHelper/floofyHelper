@@ -1,9 +1,12 @@
-import chalk from 'chalk';
 import Discord from 'discord.js'; // Discord API
 import { REST } from '@discordjs/rest';
-import { timestamp, client } from './initial.js';
+import { client } from './classes/client.js';
+import Logger from './classes/logger.js';
 
 // -------------------------------------------------------------------------------
+
+// @ts-ignore
+const deleteCommands = [];
 
 const commands = [
   new Discord.SlashCommandBuilder()
@@ -39,12 +42,8 @@ const rest = new REST({ version: process.env.DISCORD_API_VERSION }).setToken(
 );
 
 rest
-  .put(Discord.Routes.applicationCommands(client.user?.id!), { body: commands })
+  .put(Discord.Routes.applicationCommands(process.env.BOT_APPLICATION_ID!), { body: commands })
   .then(() =>
-    console.log(
-      chalk.white(timestamp()),
-      chalk.underline.blueBright(client.user?.username),
-      chalk.greenBright(' Successfully registered slash commands')
-    )
+    new Logger(`${client.user?.username}`).success('Successfully registered slash commands')
   )
   .catch(console.error);

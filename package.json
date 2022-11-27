@@ -2,13 +2,15 @@
   "name": "floofyhelper",
   "version": "1.0.0",
   "main": "build/initial.js",
-  "type": "module",
   "license": "AGPL-3.0",
   "scripts": {
     "start": "tsc && node . ",
     "test": "tsc && node --trace-warnings . dev ",
     "format": "prettier . --write",
-    "generate": "prisma generate --schema=./src/prisma/schema.prisma"
+    "generate": "prisma generate"
+  },
+  "prisma": {
+    "schema": "./src/prisma/schema.prisma"
   },
   "prettier": {
     "singleQuote": true,
@@ -21,7 +23,7 @@
   "dependencies": {
     "@prisma/client": "^4.6.1",
     "@sentry/node": "^7.20.0",
-    "chalk": "^5.1.0",
+    "chalk": "4",
     "discord-verify": "^1.0.0",
     "discord.js": "^14.6.0",
     "dotenv": "^16.0.1",
