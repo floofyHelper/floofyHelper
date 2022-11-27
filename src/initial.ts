@@ -1,31 +1,10 @@
 import './dotenv/config.js';
-import Client from './classes/client.js';
-// @ts-ignore
-import Database from './classes/database.js';
-import Server from './classes/server.js';
 
-import Discord from 'discord.js';
 import * as Sentry from '@sentry/node';
 
-// -------------------------------------------------------------------------------
-
-export const client = new Discord.Client({
-  // Configure Main Bot Permissions
-  intents: [
-    Discord.GatewayIntentBits.Guilds,
-    Discord.GatewayIntentBits.GuildMembers,
-    Discord.GatewayIntentBits.GuildMessages,
-    Discord.GatewayIntentBits.GuildVoiceStates,
-  ],
-});
-export const client2 = new Discord.Client({
-  // Configure Secondary Bot Permissions
-  intents: [
-    Discord.GatewayIntentBits.Guilds,
-    Discord.GatewayIntentBits.GuildMembers,
-    Discord.GatewayIntentBits.GuildMessages,
-  ],
-});
+import Client from './classes/client.js';
+import Database from './classes/database.js';
+import Server from './classes/server.js';
 
 // -------------------------------------------------------------------------------
 

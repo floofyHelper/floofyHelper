@@ -1,7 +1,6 @@
 import Discord, { ButtonBuilder, ModalActionRowComponentBuilder } from 'discord.js';
 
 import Database from './database.js';
-import Logger from './logger.js';
 
 export let client: FH;
 export let db: Database;
@@ -10,7 +9,6 @@ export default class Client {
   id: string;
   publicKey: string;
   token: string;
-  console: Logger;
   discordApiUrl: string;
 
   constructor({
@@ -25,7 +23,6 @@ export default class Client {
     this.id = applicationId;
     this.publicKey = publicKey;
     this.token = token;
-    this.console = new Logger(`Server`);
     this.discordApiUrl = process.env.DISCORD_API_VERSION || 'https://discord.com';
   }
 
@@ -37,7 +34,7 @@ export default class Client {
     client = new FH();
     await client.login(process.env.BOT_TOKEN);
     client.once('ready', async () => {
-      await import('../index.js');
+      await import('../bot.js');
     });
   }
 

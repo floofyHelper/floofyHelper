@@ -1,15 +1,15 @@
-import Discord from 'discord.js'; // Discord API
 import('./deployCommands.js');
-import * as functions from './functions.js';
+
+import Discord from 'discord.js';
 
 import Client, { client } from './classes/client.js';
+import * as functions from './classes/functions.js';
 import Logger from './classes/logger.js';
 
 const embed = Client.embed;
 const button = Client.button;
 const modal = Client.modal;
 
-// -------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------
 
 client.on('guildMemberAdd', async member => {

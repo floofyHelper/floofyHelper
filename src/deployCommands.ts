@@ -1,5 +1,6 @@
-import Discord from 'discord.js'; // Discord API
+import Discord from 'discord.js';
 import { REST } from '@discordjs/rest';
+
 import { client } from './classes/client.js';
 import Logger from './classes/logger.js';
 

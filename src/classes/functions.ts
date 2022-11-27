@@ -1,7 +1,5 @@
-import { client } from './initial.js';
-
-import Client from './classes/client.js';
-import Logger from './classes/logger.js';
+import Client, { client } from './client.js';
+import Logger from './logger.js';
 
 const embed = Client.embed;
 const button = Client.button;
