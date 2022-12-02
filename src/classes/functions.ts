@@ -1,8 +1,6 @@
-import Client, { client } from './client.js';
+import { client } from './client.js';
+import Components from './components.js';
 import Logger from './logger.js';
-
-const embed = Client.embed;
-const button = Client.button;
 
 export function consoleLogError(err: any) {
   new Logger('Server').error(err);
@@ -56,8 +54,8 @@ export async function sendToErrorLog(err: any, interaction: any) {
   try {
     // Send error embed to user
     await interaction.user.send({
-      embeds: [embed.error],
-      components: [button.error],
+      embeds: [Components.embed.error],
+      components: [Components.button.error],
       ephemeral: true,
     });
     // Log error in error logging channel
@@ -68,7 +66,7 @@ export async function sendToErrorLog(err: any, interaction: any) {
       '## <:myBots:1001930208393314334> This channel is used to inform devs of errors with <@!953794936736727110>\n\n- Follow this channel to receive alerts',
       {
         content: '||<@&1038965218581160006>||',
-        embeds: [embed.error],
+        embeds: [Components.embed.error],
       }
     );
     // Log error in console

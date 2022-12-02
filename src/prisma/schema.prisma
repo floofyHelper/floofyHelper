@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["clientExtensions"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -8,15 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model guild {
-  id           String         @id @map("_id")
-  verification verificationId
+model user {
+  id           String             @id @map("_id")
+  verification verificationFields
 }
 
-type verificationId {
-  verificationId verificationIdFields
-}
-
-type verificationIdFields {
-  verificationIdSubmissions String[]
+type verificationFields {
+  age        String?
+  submission String[]
 }
