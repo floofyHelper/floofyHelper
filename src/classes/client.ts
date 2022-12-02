@@ -1,9 +1,10 @@
 import Discord, { ButtonBuilder, ModalActionRowComponentBuilder } from 'discord.js';
+import fs from 'fs';
+import path from 'path';
 
-import Database from './database.js';
+import Logger from './logger.js';
 
 export let client: FH;
-export let db: Database;
 
 export default class Client {
   id: string;
@@ -27,14 +28,24 @@ export default class Client {
   }
 
   async start() {
-    // Database
-    db = new Database();
-
     // Discord gateway
     client = new FH();
-    await client.login(process.env.BOT_TOKEN);
+    if (process.env.BOT_TOKEN) await client.login(process.env.BOT_TOKEN);
     client.once('ready', async () => {
-      await import('../bot.js');
+      await import('../deployCommands.js');
+      // Event handling
+      const eventsPath = path.join(__dirname, '../events');
+      const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
+      for (const file of eventFiles) {
+        const filePath = path.join(eventsPath, file);
+        const event = require(filePath);
+        if (event.once) {
+          client.once(event.name, (...args) => event.execute(...args));
+        } else {
+          client.on(event.name, (...args) => event.execute(...args));
+        }
+      }
+      new Logger(`${client.user?.username}`).success(`${client.user?.tag} is logged in`);
     });
   }
 
@@ -57,7 +68,7 @@ export default class Client {
     error: new Discord.EmbedBuilder() //
       .setColor(0xeb716f)
       .setAuthor({
-        name: 'Something went wrong!',
+        name: 'Uh-oh, something went wrong!',
         iconURL:
           'https://cdn.discordapp.com/emojis/1015719863446151198.webp?size=240&quality=lossless',
       }),
@@ -83,7 +94,7 @@ export default class Client {
             iconURL: `${interaction2.iconURL()}`,
           })
           .setDescription(
-            "Before you can access the server, we need you to answer some questions to make sure this server is a good fit for you. Whenever you're ready, please start below. \n \n > Please select your age group below to verify your account. \n > **Lying about your age will result in a ban.**"
+            "Before you can access the server, we need to ask some questions to make sure this server is a good fit for you. Whenever you're ready, please start below. \n \n > Please select your age group below to verify your account. \n > **Lying about your age will result in a ban.**"
           ),
 
       2: (interaction: any, guildIcon: any) =>
@@ -238,8 +249,15 @@ export default class Client {
       .addComponents(
         new Discord.ButtonBuilder()
           .setLabel('Support Server')
-          .setURL('https://discord.gg/hRmjAUvrpT')
+          .setURL('https://discord.gg/XyVCvZwxhA')
           .setStyle(Discord.ButtonStyle.Link)
+      )
+      .addComponents(
+        new Discord.ButtonBuilder()
+          .setCustomId('400')
+          .setLabel('Error: 400')
+          .setDisabled(true)
+          .setStyle(Discord.ButtonStyle.Secondary)
       ),
 
     verification: {
@@ -414,6 +432,7 @@ export default class Client {
 }
 
 class FH extends Discord.Client {
+  [x: string]: any;
   constructor() {
     super({
       intents: [
@@ -422,10 +441,6 @@ class FH extends Discord.Client {
         Discord.GatewayIntentBits.GuildMessages,
         Discord.GatewayIntentBits.GuildVoiceStates,
       ],
-      presence: {
-        activities: [{ name: '/help • Floofy Helper', type: Discord.ActivityType.Listening }],
-        status: 'online',
-      },
       allowedMentions: {
         repliedUser: false,
       },

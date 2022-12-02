@@ -8,7 +8,7 @@ import Server from './classes/server.js';
 
 // -------------------------------------------------------------------------------
 
-const { BOT_APPLICATION_ID, BOT_PUBLIC_KEY, BOT_TOKEN } = process.env;
+const { BOT_TOKEN, BOT_PUBLIC_KEY, BOT_APPLICATION_ID } = process.env;
 const devMode = process.argv.includes('dev');
 
 const database = new Database();

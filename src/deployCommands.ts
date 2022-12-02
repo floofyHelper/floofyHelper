@@ -7,8 +7,9 @@ import Logger from './classes/logger.js';
 // -------------------------------------------------------------------------------
 
 // @ts-ignore
-const deleteCommands = [];
+const deleteCommands: any = [];
 
+// @ts-ignore
 const commands = [
   new Discord.SlashCommandBuilder()
     /* Staff / Commands */
@@ -38,13 +39,28 @@ const commands = [
     .setDMPermission(false),
 ];
 
-const rest = new REST({ version: process.env.DISCORD_API_VERSION }).setToken(
-  process.env.BOT_TOKEN!
-);
+if (client.user?.id === process.env.BOT_APPLICATION_ID)
+  new REST({ version: process.env.DISCORD_API_VERSION })
+    .setToken(process.env.BOT_TOKEN!)
+    .put(Discord.Routes.applicationCommands(process.env.BOT_APPLICATION_ID!), {
+      body: commands,
+    })
+    .then(() =>
+      new Logger(`${client.user?.username}`).success('Successfully registered slash commands')
+    )
+    .catch(err => {
+      new Logger(`${client.user?.username}`).error(err);
+    });
 
-rest
-  .put(Discord.Routes.applicationCommands(process.env.BOT_APPLICATION_ID!), { body: commands })
-  .then(() =>
-    new Logger(`${client.user?.username}`).success('Successfully registered slash commands')
-  )
-  .catch(console.error);
+if (client.user?.id === process.env.BOT2_APPLICATION_ID)
+  new REST({ version: process.env.DISCORD_API_VERSION })
+    .setToken(process.env.BOT2_TOKEN!)
+    .put(Discord.Routes.applicationCommands(process.env.BOT2_APPLICATION_ID!), {
+      body: commands,
+    })
+    .then(() =>
+      new Logger(`${client.user?.username}`).success('Successfully registered slash commands')
+    )
+    .catch(err => {
+      new Logger(`${client.user?.username}`).error(err);
+    });

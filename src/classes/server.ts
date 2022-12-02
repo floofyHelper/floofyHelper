@@ -14,8 +14,8 @@ export default class Server {
   }
 
   async start() {
-    this.console.startup('Booting server and database...');
-    //await this.database.start();
+    this.console.info('Booting server and database...');
+    await this.database.start();
     for (const client of this.clients) {
       await client.start();
     }
