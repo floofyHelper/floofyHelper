@@ -14,7 +14,7 @@ module.exports = {
       const { commandName } = interaction;
       if (commandName === 'help') {
         await interaction.reply({
-          embeds: [Components.embed.verification.help(client)],
+          embeds: [Components.embed.verification.help(client.user)],
           components: [Components.button.verification.help],
           ephemeral: true,
         });

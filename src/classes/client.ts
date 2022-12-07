@@ -34,7 +34,7 @@ export default class Client {
     client.once('ready', async () => {
       await import('../deployCommands.js');
       // Event handling
-      const eventsPath = path.join(__dirname, '../events');
+      const eventsPath = path.join(__dirname, '../events', '../events/verification');
       const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
       for (const file of eventFiles) {
         const filePath = path.join(eventsPath, file);
@@ -69,7 +69,7 @@ export default class Client {
         }
       });*/
 
-      new Logger(`${client.user?.username}`).info(`${client.user?.tag} is logged in`);
+      new Logger(`${client.user?.username}`).success(`${client.user?.tag} is logged in`);
     });
   }
 
@@ -77,6 +77,12 @@ export default class Client {
     check: '<:check:1048303890283634688>',
     undecided: '<:undecided:1048303887985168437>',
     cross: '<:cross:1048303889172135966>',
+    blank: '<:blank:1049392956601270313>',
+
+    reply: '<:reply:1048464060414435468>',
+    reply_: '<:reply_:1048464061320401006>',
+    replyIndented: '<:replyIndented:1048464061827915858>',
+    replyIndented_: '<:replyIndented_:1048464062901661787>',
   };
 
   static emojiUrl = {
@@ -108,6 +114,7 @@ class FH extends Discord.Client {
       allowedMentions: {
         repliedUser: false,
       },
+      partials: [Discord.Partials.Channel, Discord.Partials.Message],
     });
   }
 }

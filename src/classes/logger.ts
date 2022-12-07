@@ -16,8 +16,8 @@ export default class Logger {
     )} ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}`;
   }
 
-  print(content: any, color: string, type: string, typeColor: string) {
-    console.log(
+  print(logType: any, content: any, color: string, type: string, typeColor: string) {
+    logType(
       chalk`{${color} [${this.getTimestamp()}]} {${typeColor} ${type}} {${color} [${this.prefix}]}`,
       content
     );
@@ -26,22 +26,22 @@ export default class Logger {
   log = this.info;
 
   startup(content: any) {
-    this.print(content, 'magentaBright.bold', ' STARTUP ', 'bgMagentaBright.black');
+    this.print(console.log, content, 'magentaBright.bold', ' STARTUP ', 'bgMagentaBright.black');
   }
 
   info(content: any) {
-    this.print(content, 'blueBright.bold', ' INFO ', 'bgBlueBright.black');
+    this.print(console.log, content, 'blueBright.bold', ' INFO ', 'bgBlueBright.black');
   }
 
   success(content: any) {
-    this.print(content, 'greenBright.bold', ' INFO ', 'bgGreenBright.black');
+    this.print(console.log, content, 'greenBright.bold', ' INFO ', 'bgGreenBright.black');
   }
 
   error(content: any) {
-    this.print(content, 'redBright.bold', ' ERROR ', 'bgRedBright.black');
+    this.print(console.error, content, 'redBright.bold', ' ERROR ', 'bgRedBright.black');
   }
 
   warn(content: any) {
-    this.print(content, 'yellowBright.bold', ' WARN ', 'bgYellowBright.black');
+    this.print(console.warn, content, 'yellowBright.bold', ' WARN ', 'bgYellowBright.black');
   }
 }

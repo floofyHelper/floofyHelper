@@ -13,7 +13,7 @@ export default class Database {
 
   async start() {
     await this.db.$connect().then(() => {
-      this.console.info('Connected to database');
+      this.console.success('Connected to database');
     });
   }
 }
