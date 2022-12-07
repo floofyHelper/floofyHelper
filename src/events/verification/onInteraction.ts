@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Discord from 'discord.js';
 import { PrismaClient } from '@prisma/client';
 
@@ -61,7 +60,7 @@ module.exports = {
           await interaction.deferReply();
           await interaction.message.delete();
           await client.users.fetch(interaction.user.id).then(async user => {
-            await user.dmChannel.messages
+            await user.dmChannel?.messages
               .fetch(interaction.customId.split(',').at(3)!)
               .then(async message => {
                 await message.delete();
@@ -74,8 +73,8 @@ module.exports = {
               },
             })
             .then(async user => {
-              const answers = [];
-              user.submissions.forEach(answer => {
+              const answers: string[] = [];
+              user?.submissions.forEach(answer => {
                 answers.push(answer);
               });
               await prisma.guild
@@ -84,20 +83,20 @@ module.exports = {
                   select: { settings: { select: { verification: {} } } },
                 })
                 .then(async guild => {
-                  const questions = [];
-                  guild.settings.verification.questions.forEach(question => {
+                  const questions: string[] = [];
+                  guild?.settings?.verification.questions.forEach(question => {
                     questions.push(question);
                   });
                   await client.channels
-                    .fetch(guild.settings.verification.channel)
+                    .fetch(guild?.settings?.verification.channel!)
                     .then(async channel => {
-                      if (channel.isTextBased()) {
+                      if (channel?.isTextBased()) {
                         await channel.send({
                           embeds: [
                             Components.embed.verification.review(
                               interaction.user,
-                              await client.guilds.fetch(interaction.customId.split(',').at(1)),
-                              user.age,
+                              await client.guilds.fetch(interaction.customId.split(',').at(1)!),
+                              user?.age,
                               questions,
                               answers
                             ),
@@ -109,8 +108,8 @@ module.exports = {
                         .send({
                           embeds: [
                             Components.embed.verification[3](
-                              await client.guilds.fetch(interaction.customId.split(',').at(1)),
-                              user.age,
+                              await client.guilds.fetch(interaction.customId.split(',').at(1)!),
+                              user?.age,
                               questions,
                               answers
                             ),
@@ -136,7 +135,7 @@ module.exports = {
           });
           await interaction.message.delete();
           await client.users.fetch(interaction.user.id).then(async user => {
-            await user.dmChannel.messages
+            await user.dmChannel?.messages
               .fetch(interaction.customId.split(',').at(3)!)
               .then(async message => {
                 await message.delete();
@@ -157,11 +156,11 @@ module.exports = {
 
         if (interaction.customId === 'verificationHelp 2') {
           await interaction.deferUpdate();
-          const buttons = Components.button.verification[1](interaction.guild.id);
+          const buttons = Components.button.verification[1](interaction.guild?.id);
           buttons.components.forEach(buttons => {
             buttons.setDisabled(false).setStyle(Discord.ButtonStyle.Secondary);
           });
-          if (interaction.guild.name === undefined) {
+          if (interaction.guild?.name === undefined) {
           } else {
             await interaction.user.send({
               embeds: [Components.embed.verification[1](interaction.user, interaction.guild)],
