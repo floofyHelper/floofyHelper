@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/node';
 
 import Client from './classes/client.js';
 import Database from './classes/database.js';
+import Logger from './classes/logger.js';
 import Server from './classes/server.js';
 
 // -------------------------------------------------------------------------------
@@ -29,6 +30,7 @@ if (!devMode && process.env.SENTRY_DSN) {
   Sentry.init({ dsn: process.env.SENTRY_DSN });
   process.on('unhandledRejection', err => {
     Sentry.captureException(err);
+    new Logger('Error').error(err);
   });
 }
 

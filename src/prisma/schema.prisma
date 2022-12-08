@@ -8,26 +8,34 @@ datasource db {
 }
 
 model guild {
-  id           String               @id @map("_id")
-  settings     guildSettingsFields?
+  id           String              @id @map("_id") /// Guild ID
+  settings     guildSettings?
   verification guildVerification[]
+
+  @@map("Guild")
 }
 
 // Guild Settings
-type guildSettingsFields {
-  verification guildSettingsFieldsVerification
+type guildSettings {
+  verification guildSettingsVerification
 }
 
-type guildSettingsFieldsVerification {
-  channel   String?
+type guildSettingsVerification {
+  mode      Int? /// 1 is DM, 2 is thread
+  type      Int? /// 1 is simple verification, 2 is advanced
+  role      String? /// Role to give user when verified
+  channel   String? /// Channel to send verification reviews to
+  log       String? /// Channel to send verification logs to
   questions String[]
 }
 
 // Guild Verification
 model guildVerification {
-  id          String   @id @map("_id")
+  id          String   @id @map("_id") /// User ID
+  guildId     String
   age         String?
   submissions String[]
   guild       guild    @relation(fields: [guildId], references: [id])
-  guildId     String
+
+  @@map("Verification")
 }
