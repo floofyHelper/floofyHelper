@@ -1,4 +1,4 @@
-import Discord /*, { Collection }*/ from 'discord.js';
+import Discord from 'discord.js';
 import fs from 'fs';
 import path from 'path';
 
@@ -74,19 +74,15 @@ export default class Client {
   }
 
   static emoji = {
-    check: '<:check:1048303890283634688>',
-    undecided: '<:undecided:1048303887985168437>',
-    cross: '<:cross:1048303889172135966>',
-    blank: '<:blank:1049392956601270313>',
-
-    reply: '<:reply:1048464060414435468>',
-    reply_: '<:reply_:1048464061320401006>',
-    replyIndented: '<:replyIndented:1048464061827915858>',
-    replyIndented_: '<:replyIndented_:1048464062901661787>',
+    check: Discord.formatEmoji('1048303890283634688'),
+    undecided: Discord.formatEmoji('1048303887985168437'),
+    cross: Discord.formatEmoji('1048303889172135966'),
+    blank: Discord.formatEmoji('1049392956601270313'),
+    reply: Discord.formatEmoji('1048464060414435468'),
   };
 
   static emojiUrl = {
-    check: 'https://cdn.discordapp.com/emojis/1048303890283634688.webp?size=96&quality=lossless',
+    check: `https://cdn.discordapp.com/emojis/1048303890283634688.webp?size=96&quality=lossless`,
     undecided:
       'https://cdn.discordapp.com/emojis/1048303887985168437.webp?size=96&quality=lossless',
     cross: 'https://cdn.discordapp.com/emojis/1048303889172135966.webp?size=96&quality=lossless',
@@ -100,6 +96,15 @@ export default class Client {
   get inviteUrl() {
     return `https://discord.com/oauth2/authorize?client_id=${this.id}&permissions=19456&scope=bot%20applications.commands`;
   }
+
+  static errorCodes = {
+    badRequest: 400,
+    notFound: 404,
+    requestTimeout: 408,
+    tooManyRequests: 429,
+    badGateway: 502,
+    gatewayTimeout: 504,
+  };
 }
 
 class FH extends Discord.Client {

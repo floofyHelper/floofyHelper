@@ -26,7 +26,7 @@ type guildSettingsVerification {
   role      String? /// Role to give user when verified
   channel   String? /// Channel to send verification reviews to
   log       String? /// Channel to send verification logs to
-  questions String[]
+  questions Json[]
 }
 
 // Guild Verification
@@ -36,6 +36,4 @@ model guildVerification {
   age         String?
   submissions String[]
   guild       guild    @relation(fields: [guildId], references: [id])
-
-  @@map("Verification")
 }
