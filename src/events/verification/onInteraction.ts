@@ -16,6 +16,16 @@ module.exports = {
           interaction.message.delete(),
           interaction.client.guilds.fetch(`${interaction.customId.split(',').at(1)}`),
         ])
+          .then(guild => {
+            Promise.all([
+              interaction.user.send({
+                embeds: [Components.embed.verification.under13],
+                components: [Components.button.verification.under13],
+              }),
+              interaction.deleteReply(),
+            ]);
+            return guild;
+          })
           .then(async guild =>
             guild[2].members
               .kick(
@@ -32,15 +42,6 @@ module.exports = {
                 await interaction.deleteReply();
                 throw err;
               })
-          )
-          .then(() =>
-            Promise.all([
-              interaction.user.send({
-                embeds: [Components.embed.verification.under13],
-                components: [Components.button.verification.under13],
-              }),
-              interaction.deleteReply(),
-            ])
           );
         /*client.channels.fetch('2345342312').then(async channel => {
             if (channel.isTextBased()) {
@@ -321,13 +322,12 @@ module.exports = {
 
     if (interaction.isStringSelectMenu()) {
       if (interaction.customId.startsWith('verificationReviewSelectMenu1 1')) {
-        if (interaction.values[0] === '1') {
+        if (interaction.values[0] === 'menu 1') {
           Promise.all([
             interaction.deferReply({ ephemeral: true }),
             client.users.fetch(`${interaction.customId.split(',').at(1)}`),
             prisma.guildVerification.findUnique({
-              where: { id: interaction.user.id },
-              select: { age: true },
+              where: { id: interaction.customId.split(',').at(1) },
             }),
           ]).then(data => {
             interaction.editReply({
@@ -335,7 +335,7 @@ module.exports = {
             });
           });
         }
-        if (interaction.values[0] === '2') {
+        if (interaction.values[0] === 'menu 2') {
           interaction.deferUpdate();
           if (interaction.channel?.type !== Discord.ChannelType.GuildText) return;
           interaction.channel.threads
@@ -362,16 +362,16 @@ module.exports = {
                 .then(webhook => webhook.send({ content: 'hi', threadId: thread.id }));
             });
         }
-        if (interaction.values[0] === '3') {
+        if (interaction.values[0] === 'menu 3') {
           await interaction.deferReply({ ephemeral: true });
           client.users
             .fetch(`${interaction.customId.split(',').at(1)}`)
             .then(user => {
               if (user === undefined)
                 throw (Client.errorCodes.notFound, 'Failed to request user data');
-              console.log(user.bannerURL());
               let isButtonDisabled: boolean = true;
-              if (!user.bannerURL() === null || undefined) isButtonDisabled = false;
+              console.log(user.bannerURL());
+              if (user.bannerURL()) isButtonDisabled = false;
               return { user, isButtonDisabled };
             })
             .then(data =>
