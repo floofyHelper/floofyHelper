@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 
 import Logger from './logger.js';
 

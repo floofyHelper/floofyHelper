@@ -34,6 +34,7 @@ type guildSettingsVerification {
 model guildVerification {
   id        String   @id @map("_id")
   guildId   String?  @unique
+  messageId String? /// Message ID for the user's verification application confirmation
   age       String?
   responses String[]
   guild     guild?   @relation(fields: [guildId], references: [id])
