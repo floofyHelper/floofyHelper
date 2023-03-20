@@ -94,7 +94,9 @@ module.exports = {
             })
             .then(async message => await message?.delete()),
           prisma.guild.findUnique({ where: { id: interaction.customId.split(',').at(1) } }),
-          prisma.guildVerification.findUnique({ where: { id: interaction.user.id } }),
+          prisma.guildVerification.findFirst({
+            where: { id: interaction.user.id, guildId: interaction.customId.split(',').at(1) },
+          }),
         ])
           .then(async db => {
             const channel = await interaction.client.channels.fetch(
@@ -130,18 +132,29 @@ module.exports = {
           })
           .then(async data =>
             Promise.all([
-              interaction.user.send({
-                embeds: [
-                  Components.embed.verification[3](
-                    await interaction.client.guilds.fetch(
-                      `${interaction.customId.split(',').at(1)}`
+              interaction.user
+                .send({
+                  embeds: [
+                    Components.embed.verification[3](
+                      await interaction.client.guilds.fetch(
+                        `${interaction.customId.split(',').at(1)}`
+                      ),
+                      data?.db[4]?.age,
+                      data?.db[3]?.settings?.verification,
+                      data?.db[4]?.responses
                     ),
-                    data?.db[4]?.age,
-                    data?.db[3]?.settings?.verification,
-                    data?.db[4]?.responses
-                  ),
-                ],
-              }),
+                  ],
+                })
+                .then(
+                  async message =>
+                    await prisma.guildVerification.updateMany({
+                      where: {
+                        id: interaction.user.id,
+                        guildId: interaction.customId.split(',').at(1),
+                      },
+                      data: { messageId: message.id },
+                    })
+                ),
               interaction.deleteReply(),
             ])
           )
@@ -190,14 +203,21 @@ module.exports = {
           .then(async user => {
             const guildMember = await interaction.guild?.members.fetch(user);
             const guild = await prisma.guild.findUnique({ where: { id: interaction.guild?.id } });
-            return { user, guildMember, guild };
+            const messageId = await prisma.guildVerification.findFirst({
+              where: { id: interaction.customId.split(',').at(1), guildId: interaction.guild?.id },
+              select: { messageId: true },
+            });
+            return { user, guildMember, guild, messageId };
           })
           .then(data => {
             data.guildMember?.roles.add(`${data.guild?.settings?.verification.role}`);
             return data;
           })
-          .then(data =>
+          .then(async data =>
             Promise.all([
+              await data.user.dmChannel?.messages
+                .fetch(`${data.messageId?.messageId}`)
+                .then(async message => await message.delete()),
               data.user.send(`${Client.emoji.check} Your in!`),
               interaction.editReply('Succesfully verified user'),
             ])
@@ -215,6 +235,17 @@ module.exports = {
             await interaction.client.users.fetch(`${interaction.customId.split(',').at(1)}`)
           )
         );
+        await interaction.client.users
+          .fetch(`${interaction.customId.split(',').at(1)}`)
+          .then(async user => {
+            const message = await prisma.guildVerification.findFirst({
+              where: { id: interaction.customId.split(',').at(1), guildId: interaction.guild?.id },
+              select: { messageId: true },
+            });
+            user.dmChannel?.messages
+              .fetch(`${message?.messageId}`)
+              .then(async message => await message.delete());
+          });
       }
 
       // User ID for Verification Application
@@ -289,10 +320,9 @@ module.exports = {
           .findFirst({
             where: { id: interaction.user.id, guildId: interaction.customId.split(',').at(1) },
           })
-          .then(data => {
+          .then(async data => {
             if (data) {
-              console.log('yes', data);
-              prisma.guildVerification.updateMany({
+              await prisma.guildVerification.updateMany({
                 where: {
                   id: interaction.user.id,
                   guildId: `${interaction.customId.split(',').at(1)}`,
@@ -309,8 +339,7 @@ module.exports = {
                 },
               });
             } else {
-              console.log('no', data);
-              prisma.guildVerification.create({
+              await prisma.guildVerification.create({
                 data: {
                   id: interaction.user.id,
                   guildId: interaction.customId.split(',').at(1),
@@ -327,27 +356,6 @@ module.exports = {
             }
           });
         Promise.all([
-          /*     id: interaction.user.id,
-              guildId: `${interaction.customId.split(',').at(1)}`,
-              age: age,
-              responses: [
-                interaction.fields.getTextInputValue('verification1 1'),
-                interaction.fields.getTextInputValue('verification1 2'),
-                interaction.fields.getTextInputValue('verification1 3'),
-                interaction.fields.getTextInputValue('verification1 4'),
-                interaction.fields.getTextInputValue('verification1 5'),
-              ],
-            },
-
-              age: age,
-              responses: [
-                interaction.fields.getTextInputValue('verification1 1'),
-                interaction.fields.getTextInputValue('verification1 2'),
-                interaction.fields.getTextInputValue('verification1 3'),
-                interaction.fields.getTextInputValue('verification1 4'),
-                interaction.fields.getTextInputValue('verification1 5'),
-              ],
-            },*/
           interaction.user.send({
             embeds: [
               Components.embed.verification[2](
