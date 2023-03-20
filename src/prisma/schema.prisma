@@ -1,40 +1,42 @@
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-1.1.x"]
-}
-
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 model guild {
-  id           String              @id @map("_id") /// Guild ID
-  settings     guildSettings?
+  id           String              @id @map("_id")
+  settings     guildSettings
   verification guildVerification[]
 
   @@map("Guild")
 }
 
-// Guild Settings
+// Settings
+
 type guildSettings {
   verification guildSettingsVerification
 }
 
 type guildSettingsVerification {
-  mode      Int? /// 1 is DM, 2 is thread
-  type      Int? /// 1 is simple verification, 2 is advanced
-  role      String? /// Role to give user when verified
-  channel   String? /// Channel to send verification reviews to
-  log       String? /// Channel to send verification logs to
-  questions Json[]
+  isEnabled           Boolean?
+  questions           String[]
+  verificationChannel BigInt?
+  verificationLog     BigInt?
+  role                BigInt[]
 }
 
-// Guild Verification
+// Verification
+
 model guildVerification {
-  id          String   @id @map("_id") /// User ID
-  guildId     String
-  age         String?
-  submissions String[]
-  guild       guild    @relation(fields: [guildId], references: [id])
+  id        String   @id @map("_id")
+  guildId   String?  @unique
+  age       String?
+  responses String[]
+  guild     guild?   @relation(fields: [guildId], references: [id])
+
+  @@map("Verification")
 }

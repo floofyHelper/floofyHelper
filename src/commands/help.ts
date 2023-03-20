@@ -2,7 +2,7 @@ import Discord from 'discord.js';
 
 import { client } from '../classes/client';
 import Components from '../classes/components';
-import * as functions from '../classes/functions.js';
+//import * as functions from '../classes/functions.js';
 
 module.exports = {
   data: new Discord.SlashCommandBuilder()
@@ -20,7 +20,7 @@ module.exports = {
         });
       }
     } catch (err) {
-      await functions.sendToErrorLog(err, interaction);
+      // await functions.sendToErrorLog(err, interaction);
     }
   },
 };

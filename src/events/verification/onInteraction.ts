@@ -1,7 +1,7 @@
 import Discord from 'discord.js';
 import { PrismaClient } from '@prisma/client';
 
-import Client, { client } from '../../classes/client.js';
+import Client from '../../classes/client.js';
 import Components from '../../classes/components.js';
 
 const prisma = new PrismaClient();
@@ -9,7 +9,10 @@ const prisma = new PrismaClient();
 module.exports = {
   name: Discord.Events.InteractionCreate,
   async execute(interaction: Discord.Interaction) {
+    /* Button Interactions */
+
     if (interaction.isButton()) {
+      // Under 13
       if (interaction.customId.startsWith('verification1 1')) {
         Promise.all([
           interaction.deferReply(),
@@ -52,6 +55,7 @@ module.exports = {
           });*/
       }
 
+      // 13-15
       if (interaction.customId.startsWith('verification1 2')) {
         const Id = interaction.customId.split(',');
         Id.shift();
@@ -59,6 +63,7 @@ module.exports = {
         await interaction.showModal(Components.modal.verification[1](Id));
       }
 
+      // 16-17
       if (interaction.customId.startsWith('verification1 3')) {
         const Id = interaction.customId.split(',');
         Id.shift();
@@ -66,6 +71,7 @@ module.exports = {
         await interaction.showModal(Components.modal.verification[1](Id));
       }
 
+      // 18+
       if (interaction.customId.startsWith('verification1 4')) {
         const Id = interaction.customId.split(',');
         Id.shift();
@@ -73,11 +79,12 @@ module.exports = {
         await interaction.showModal(Components.modal.verification[1](Id));
       }
 
+      // Submit Verification
       if (interaction.customId.startsWith('verification2 1')) {
         Promise.all([
           interaction.deferReply(),
           interaction.message.delete(),
-          client.users
+          interaction.client.users
             .fetch(interaction.user.id)
             .then(async user => {
               const message = await user.dmChannel?.messages.fetch(
@@ -90,20 +97,24 @@ module.exports = {
           prisma.guildVerification.findUnique({ where: { id: interaction.user.id } }),
         ])
           .then(async db => {
-            const channel = await client.channels.fetch(`${db[3]?.settings?.verification.channel}`);
+            const channel = await interaction.client.channels.fetch(
+              `${db[3]?.settings?.verification.verificationChannel}`
+            );
             return { db, channel };
           })
           .then(async data => {
-            if (!data?.channel?.isTextBased()) return;
+            if (!data.channel?.isTextBased()) return;
             await data.channel
               .send({
                 embeds: [
                   Components.embed.verification.review[1](
                     interaction.user,
-                    await client.guilds.fetch(`${interaction.customId.split(',').at(1)}`),
+                    await interaction.client.guilds.fetch(
+                      `${interaction.customId.split(',').at(1)}`
+                    ),
                     data.db[4]?.age,
                     data.db[3]?.settings?.verification,
-                    data.db[4]?.submissions
+                    data.db[4]?.responses
                   ),
                 ],
                 components: [
@@ -122,10 +133,12 @@ module.exports = {
               interaction.user.send({
                 embeds: [
                   Components.embed.verification[3](
-                    await client.guilds.fetch(`${interaction.customId.split(',').at(1)}`),
+                    await interaction.client.guilds.fetch(
+                      `${interaction.customId.split(',').at(1)}`
+                    ),
                     data?.db[4]?.age,
                     data?.db[3]?.settings?.verification,
-                    data?.db[4]?.submissions
+                    data?.db[4]?.responses
                   ),
                 ],
               }),
@@ -135,6 +148,7 @@ module.exports = {
           .finally(() => prisma.$disconnect);
       }
 
+      // Restart Verification
       if (interaction.customId.startsWith('verification2 2')) {
         await interaction.deferReply();
         const id = interaction.customId.split(',').at(1);
@@ -142,7 +156,10 @@ module.exports = {
         buttons.components.forEach(buttons =>
           buttons.setDisabled(false).setStyle(Discord.ButtonStyle.Secondary)
         );
-        Promise.all([interaction.message.delete(), client.users.fetch(interaction.user.id)])
+        Promise.all([
+          interaction.message.delete(),
+          interaction.client.users.fetch(interaction.user.id),
+        ])
           .then(async user => {
             const message = await user[1].dmChannel?.messages.fetch(
               `${interaction.customId.split(',').at(3)}`
@@ -156,7 +173,7 @@ module.exports = {
                 embeds: [
                   Components.embed.verification[1](
                     interaction.user,
-                    await client.guilds.fetch(`${id}`)
+                    await interaction.client.guilds.fetch(`${id}`)
                   ),
                 ],
                 components: [buttons],
@@ -166,9 +183,10 @@ module.exports = {
           );
       }
 
+      // Accept Verification Application
       if (interaction.customId.startsWith('verificationReview 1')) {
         Promise.all([interaction.deferReply({ ephemeral: true }), interaction.message.delete()])
-          .then(() => client.users.fetch(`${interaction.customId.split(',').at(1)}`))
+          .then(() => interaction.client.users.fetch(`${interaction.customId.split(',').at(1)}`))
           .then(async user => {
             const guildMember = await interaction.guild?.members.fetch(user);
             const guild = await prisma.guild.findUnique({ where: { id: interaction.guild?.id } });
@@ -190,18 +208,21 @@ module.exports = {
           });
       }
 
+      // Deny Verification Application
       if (interaction.customId.startsWith('verificationReview 2')) {
         interaction.showModal(
           Components.modal.verification.deny(
-            await client.users.fetch(`${interaction.customId.split(',').at(1)}`)
+            await interaction.client.users.fetch(`${interaction.customId.split(',').at(1)}`)
           )
         );
       }
 
+      // User ID for Verification Application
       if (interaction.customId.startsWith('verificationReviewButton1 3')) {
         interaction.reply({ content: `${interaction.customId.split(',').at(1)}`, ephemeral: true });
       }
 
+      // Resend Verification After Denial
       if (interaction.customId.startsWith('verificationDeny 1')) {
         await interaction.deferReply();
         const buttons = Components.button.verification[1](interaction.customId.split(',').at(1));
@@ -214,7 +235,7 @@ module.exports = {
             embeds: [
               Components.embed.verification[1](
                 interaction.user,
-                await client.guilds.fetch(`${interaction.customId.split(',').at(1)}`)
+                await interaction.client.guilds.fetch(`${interaction.customId.split(',').at(1)}`)
               ),
             ],
             components: [buttons],
@@ -244,6 +265,8 @@ module.exports = {
       }
     }
 
+    /* Modal Interactions */
+
     if (interaction.isModalSubmit()) {
       if (interaction.customId.startsWith('verification1')) {
         const buttons = Components.button.verification[1]();
@@ -262,32 +285,74 @@ module.exports = {
         if (buttonId === 1) age = '13-15';
         if (buttonId === 2) age = '16-17';
         if (buttonId === 3) age = '18+';
-        Promise.all([
-          prisma.guild.update({
-            where: { id: interaction.customId.split(',').at(1) },
-            data: {
-              verification: {
-                update: {
-                  where: { id: interaction.user.id },
-                  data: {
-                    age: age,
-                    submissions: [
-                      interaction.fields.getTextInputValue('verification1 1'),
-                      interaction.fields.getTextInputValue('verification1 2'),
-                      interaction.fields.getTextInputValue('verification1 3'),
-                      interaction.fields.getTextInputValue('verification1 4'),
-                      interaction.fields.getTextInputValue('verification1 5'),
-                    ],
-                  },
+        await prisma.guildVerification
+          .findFirst({
+            where: { id: interaction.user.id, guildId: interaction.customId.split(',').at(1) },
+          })
+          .then(data => {
+            if (data) {
+              console.log('yes', data);
+              prisma.guildVerification.updateMany({
+                where: {
+                  id: interaction.user.id,
+                  guildId: `${interaction.customId.split(',').at(1)}`,
                 },
-              },
+                data: {
+                  age: age,
+                  responses: [
+                    interaction.fields.getTextInputValue('verification1 1'),
+                    interaction.fields.getTextInputValue('verification1 2'),
+                    interaction.fields.getTextInputValue('verification1 3'),
+                    interaction.fields.getTextInputValue('verification1 4'),
+                    interaction.fields.getTextInputValue('verification1 5'),
+                  ],
+                },
+              });
+            } else {
+              console.log('no', data);
+              prisma.guildVerification.create({
+                data: {
+                  id: interaction.user.id,
+                  guildId: interaction.customId.split(',').at(1),
+                  age: age,
+                  responses: [
+                    interaction.fields.getTextInputValue('verification1 1'),
+                    interaction.fields.getTextInputValue('verification1 2'),
+                    interaction.fields.getTextInputValue('verification1 3'),
+                    interaction.fields.getTextInputValue('verification1 4'),
+                    interaction.fields.getTextInputValue('verification1 5'),
+                  ],
+                },
+              });
+            }
+          });
+        Promise.all([
+          /*     id: interaction.user.id,
+              guildId: `${interaction.customId.split(',').at(1)}`,
+              age: age,
+              responses: [
+                interaction.fields.getTextInputValue('verification1 1'),
+                interaction.fields.getTextInputValue('verification1 2'),
+                interaction.fields.getTextInputValue('verification1 3'),
+                interaction.fields.getTextInputValue('verification1 4'),
+                interaction.fields.getTextInputValue('verification1 5'),
+              ],
             },
-          }),
+
+              age: age,
+              responses: [
+                interaction.fields.getTextInputValue('verification1 1'),
+                interaction.fields.getTextInputValue('verification1 2'),
+                interaction.fields.getTextInputValue('verification1 3'),
+                interaction.fields.getTextInputValue('verification1 4'),
+                interaction.fields.getTextInputValue('verification1 5'),
+              ],
+            },*/
           interaction.user.send({
             embeds: [
               Components.embed.verification[2](
                 interaction,
-                await client.guilds.fetch(`${interaction.customId.split(',').at(1)}`)
+                await interaction.client.guilds.fetch(`${interaction.customId.split(',').at(1)}`)
               ),
             ],
             components: [Components.button.verification[2](id)],
@@ -299,33 +364,37 @@ module.exports = {
         Promise.all([
           interaction.deferReply({ ephemeral: true }),
           interaction.message?.delete(),
-          client.users.fetch(`${interaction.customId.split(',').at(1)}`).then(async user =>
-            user.send({
-              embeds: [
-                Components.embed.verification.deny(
-                  await client.guilds.fetch(`${interaction.guild?.id}`),
-                  interaction.fields.getTextInputValue('verificationDeny 1')
-                ),
-              ],
-              components: [
-                Components.button.verification.deny(
-                  await client.guilds.fetch(`${interaction.guild?.id}`)
-                ),
-              ],
-            })
-          ),
+          interaction.client.users
+            .fetch(`${interaction.customId.split(',').at(1)}`)
+            .then(async user =>
+              user.send({
+                embeds: [
+                  Components.embed.verification.deny(
+                    await interaction.client.guilds.fetch(`${interaction.guild?.id}`),
+                    interaction.fields.getTextInputValue('verificationDeny 1')
+                  ),
+                ],
+                components: [
+                  Components.button.verification.deny(
+                    await interaction.client.guilds.fetch(`${interaction.guild?.id}`)
+                  ),
+                ],
+              })
+            ),
         ])
           .then(() => interaction.editReply('Succesfully denied user'))
           .finally(() => setTimeout(async () => await interaction.deleteReply(), 5000));
       }
     }
 
+    /* Select Menu Interactions */
+
     if (interaction.isStringSelectMenu()) {
       if (interaction.customId.startsWith('verificationReviewSelectMenu1 1')) {
         if (interaction.values[0] === 'menu 1') {
           Promise.all([
             interaction.deferReply({ ephemeral: true }),
-            client.users.fetch(`${interaction.customId.split(',').at(1)}`),
+            interaction.client.users.fetch(`${interaction.customId.split(',').at(1)}`),
             prisma.guildVerification.findUnique({
               where: { id: interaction.customId.split(',').at(1) },
             }),
@@ -341,7 +410,8 @@ module.exports = {
           interaction.channel.threads
             .create({
               name: `Verification questioning for ${
-                (await client.users.fetch(`${interaction.customId.split(',').at(1)}`)).username
+                (await interaction.client.users.fetch(`${interaction.customId.split(',').at(1)}`))
+                  .username
               }`,
               autoArchiveDuration: Discord.ThreadAutoArchiveDuration.OneHour,
               invitable: false,
@@ -353,10 +423,14 @@ module.exports = {
               thread.parent
                 ?.createWebhook({
                   name: `${
-                    (await client.users.fetch(`${interaction.customId.split(',').at(1)}`)).username
+                    (
+                      await interaction.client.users.fetch(
+                        `${interaction.customId.split(',').at(1)}`
+                      )
+                    ).username
                   }`,
                   avatar: `${(
-                    await client.users.fetch(`${interaction.customId.split(',').at(1)}`)
+                    await interaction.client.users.fetch(`${interaction.customId.split(',').at(1)}`)
                   ).avatarURL()}`,
                 })
                 .then(webhook => webhook.send({ content: 'hi', threadId: thread.id }));
@@ -364,7 +438,7 @@ module.exports = {
         }
         if (interaction.values[0] === 'menu 3') {
           await interaction.deferReply({ ephemeral: true });
-          client.users
+          interaction.client.users
             .fetch(`${interaction.customId.split(',').at(1)}`)
             .then(user => {
               if (user === undefined)

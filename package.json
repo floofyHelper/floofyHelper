@@ -28,6 +28,9 @@
     "dotenv": "^16.0.1",
     "dotenv-vault": "^1.13.10"
   },
+  "overrides": {
+    "discord-api-types": "0.37.20"
+  },
   "devDependencies": {
     "@types/node": "^18.11.9",
     "husky": "^8.0.1",

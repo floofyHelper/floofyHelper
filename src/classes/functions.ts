@@ -1,5 +1,5 @@
 import { client } from './client.js';
-import Components from './components.js';
+//import Components from './components.js';
 import Logger from './logger.js';
 
 export function consoleLogError(err: any) {
@@ -50,7 +50,7 @@ export async function forumCheckForExistingThreadThenLog(
   }
 }
 
-export async function sendToErrorLog(err: any, interaction: any) {
+/*export async function sendToErrorLog(err: any, interaction: any) {
   try {
     // Send error embed to user
     await interaction.user.send({
@@ -74,4 +74,4 @@ export async function sendToErrorLog(err: any, interaction: any) {
   } catch (err) {
     consoleLogError(err);
   }
-}
+}*/

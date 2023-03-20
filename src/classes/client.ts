@@ -1,10 +1,10 @@
 import Discord from 'discord.js';
-import fs from 'fs';
 import path from 'path';
+import fs from 'fs';
 
 import Logger from './logger.js';
 
-export let client: FH;
+export let client: DiscordClient;
 
 export default class Client {
   id: string;
@@ -29,20 +29,31 @@ export default class Client {
 
   async start() {
     // Discord gateway
-    client = new FH();
+    client = new DiscordClient();
     await client.login(this.token);
     client.once('ready', async () => {
       await import('../deployCommands.js');
       // Event handling
-      const eventsPath = path.join(__dirname, '../events', '../events/verification');
-      const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
+      const eventsPath = path.join(__dirname, '../events');
+      const eventFiles: string[] = [];
+      const readDir = (dir: string) => {
+        const files = fs.readdirSync(dir);
+        for (const file of files) {
+          const filePath = path.join(dir, file);
+          if (fs.statSync(filePath).isDirectory()) {
+            readDir(filePath);
+          } else if (path.extname(file) === '.js') {
+            eventFiles.push(filePath);
+          }
+        }
+      };
+      readDir(eventsPath);
       for (const file of eventFiles) {
-        const filePath = path.join(eventsPath, file);
-        const event = require(filePath);
+        const event = require(file);
         if (event.once) {
-          client.once(event.name, (...args) => event.execute(...args));
+          client.once(event.name, (...args) => event.execute(...args, this));
         } else {
-          client.on(event.name, (...args) => event.execute(...args));
+          client.on(event.name, (...args) => event.execute(...args, this));
         }
       }
       // Command handling
@@ -68,17 +79,24 @@ export default class Client {
           });
         }
       });*/
-
       new Logger(`${client.user?.username}`).success(`${client.user?.tag} is logged in`);
     });
   }
 
+  static emojiId = {
+    check: '1048303890283634688',
+    undecided: '1048303887985168437',
+    cross: '1048303889172135966',
+    blank: '1049392956601270313',
+    reply: '1048464060414435468',
+  };
+
   static emoji = {
-    check: Discord.formatEmoji('1048303890283634688'),
-    undecided: Discord.formatEmoji('1048303887985168437'),
-    cross: Discord.formatEmoji('1048303889172135966'),
-    blank: Discord.formatEmoji('1049392956601270313'),
-    reply: Discord.formatEmoji('1048464060414435468'),
+    check: Discord.formatEmoji(this.emojiId.check),
+    undecided: Discord.formatEmoji(this.emojiId.undecided),
+    cross: Discord.formatEmoji(this.emojiId.cross),
+    blank: Discord.formatEmoji(this.emojiId.blank),
+    reply: Discord.formatEmoji(this.emojiId.reply),
   };
 
   static emojiUrl = {
@@ -86,6 +104,7 @@ export default class Client {
     undecided:
       'https://cdn.discordapp.com/emojis/1048303887985168437.webp?size=96&quality=lossless',
     cross: 'https://cdn.discordapp.com/emojis/1048303889172135966.webp?size=96&quality=lossless',
+    test: `https://cdn.discordapp.com/emojis/${this.emoji}.webp?size=96&quality=lossless`,
   };
 
   static color = {
@@ -98,16 +117,16 @@ export default class Client {
   }
 
   static errorCodes = {
-    badRequest: 400,
-    notFound: 404,
-    requestTimeout: 408,
-    tooManyRequests: 429,
-    badGateway: 502,
-    gatewayTimeout: 504,
+    badRequest: '400',
+    notFound: '404',
+    requestTimeout: '408',
+    tooManyRequests: '429',
+    badGateway: '502',
+    gatewayTimeout: '504',
   };
 }
 
-class FH extends Discord.Client {
+class DiscordClient extends Discord.Client {
   constructor() {
     super({
       intents: [
