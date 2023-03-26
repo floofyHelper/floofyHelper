@@ -32,6 +32,10 @@ if (!devMode && process.env.SENTRY_DSN) {
     Sentry.captureException(err);
     new Logger('Error').error(err);
   });
+} else {
+  process.on('unhandledRejection', err => {
+    new Logger('Error').error(err);
+  });
 }
 
 server.start();

@@ -2,16 +2,19 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./build",
-    "target": "ES2022",
+    "target": "ESNext",
     "module": "CommonJS",
     "moduleResolution": "Node",
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "importHelpers": true,
     "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "strict": true,
+    "removeComments": true,
     "incremental": true,
     "tsBuildInfoFile": "build/.tsbuildinfo"
   }

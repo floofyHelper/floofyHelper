@@ -218,7 +218,13 @@ module.exports = {
               await data.user.dmChannel?.messages
                 .fetch(`${data.messageId?.messageId}`)
                 .then(async message => await message.delete()),
-              data.user.send(`${Client.emoji.check} Your in!`),
+              data.user.send({
+                embeds: [
+                  Components.embed.verification.accept(
+                    await interaction.client.guilds.fetch(`${interaction.guild?.id}`)
+                  ),
+                ],
+              }),
               interaction.editReply('Succesfully verified user'),
             ])
           )
@@ -399,7 +405,7 @@ module.exports = {
 
     if (interaction.isStringSelectMenu()) {
       if (interaction.customId.startsWith('verificationReviewSelectMenu1 1')) {
-        if (interaction.values[0] === 'menu 1') {
+        if (interaction.values[0] === 'menu 3') {
           Promise.all([
             interaction.deferReply({ ephemeral: true }),
             interaction.client.users.fetch(`${interaction.customId.split(',').at(1)}`),
@@ -412,7 +418,7 @@ module.exports = {
             });
           });
         }
-        if (interaction.values[0] === 'menu 2') {
+        if (interaction.values[0] === 'menu 4') {
           interaction.deferUpdate();
           if (interaction.channel?.type !== Discord.ChannelType.GuildText) return;
           interaction.channel.threads
@@ -444,7 +450,7 @@ module.exports = {
                 .then(webhook => webhook.send({ content: 'hi', threadId: thread.id }));
             });
         }
-        if (interaction.values[0] === 'menu 3') {
+        if (interaction.values[0] === 'menu 5') {
           await interaction.deferReply({ ephemeral: true });
           interaction.client.users
             .fetch(`${interaction.customId.split(',').at(1)}`)
