@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import fs from 'fs';
 import path from 'path';
+import Components from './components.js';
 
 import Logger from './logger.js';
 
@@ -32,7 +33,35 @@ export default class Client {
     client = new DiscordClient();
     await client.login(this.token);
     client.once('ready', async () => {
-      await import('../deployCommands.js');
+      // Deploy slash commands
+      const globalCommands = [];
+      const globalCommandsPath = path.join(__dirname, '../commands');
+      const globalCommandFiles = fs
+        .readdirSync(globalCommandsPath)
+        .filter(file => file.endsWith('.js'));
+      for (const globalCommandFile of globalCommandFiles) {
+        const globalCommand = require(`../commands/${globalCommandFile}`);
+        globalCommands.push(globalCommand.data.toJSON());
+      }
+      const rest = new Discord.REST({ version: '10' }).setToken(process.env.BOT_TOKEN!);
+      (async () => {
+        try {
+          new Logger(`${client.user?.username}`).info(
+            `Started refreshing ${globalCommands.length} global slash commands...`
+          );
+          const globalData: any = await rest.put(
+            Discord.Routes.applicationCommands(process.env.BOT_APPLICATION_ID!),
+            {
+              body: globalCommands,
+            }
+          );
+          new Logger(`${client.user?.username}`).success(
+            `Successfully reloaded ${globalData.length} global slash commands`
+          );
+        } catch (error) {
+          console.error(error);
+        }
+      })();
       // Event handling
       const eventsPath = path.join(__dirname, '../events');
       const eventFiles: string[] = [];
@@ -57,7 +86,7 @@ export default class Client {
         }
       }
       // Command handling
-      /*client.commands = new Collection();
+      client.commands = new Discord.Collection();
       const commandsPath = path.join(__dirname, '../commands');
       const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
       for (const file of commandFiles) {
@@ -65,6 +94,9 @@ export default class Client {
         const command = require(filePath);
         client.commands.set(command.data.name, command);
       }
+      client.once(Discord.Events.ClientReady, () => {
+        console.log('Ready!');
+      });
       client.on(Discord.Events.InteractionCreate, async interaction => {
         if (!interaction.isChatInputCommand()) return;
         const command = client.commands.get(interaction.commandName);
@@ -73,12 +105,19 @@ export default class Client {
           await command.execute(interaction);
         } catch (error) {
           console.error(error);
-          await interaction.reply({
-            content: 'There was an error while executing this command!',
-            ephemeral: true,
-          });
+          if (interaction.replied || interaction.deferred) {
+            await interaction.followUp({
+              embeds: [Components.embed.error],
+              ephemeral: true,
+            });
+          } else {
+            await interaction.reply({
+              content: 'There was an error while executing this command!',
+              ephemeral: true,
+            });
+          }
         }
-      });*/
+      });
       new Logger(`${client.user?.username}`).success(`${client.user?.tag} is logged in`);
     });
   }
@@ -127,6 +166,7 @@ export default class Client {
 }
 
 class DiscordClient extends Discord.Client {
+  commands: Discord.Collection<string, any>;
   constructor() {
     super({
       intents: [
@@ -140,5 +180,6 @@ class DiscordClient extends Discord.Client {
       },
       partials: [Discord.Partials.Channel, Discord.Partials.Message],
     });
+    this.commands = new Discord.Collection();
   }
 }
