@@ -1,5 +1,6 @@
 import Discord from 'discord.js';
 
+import Client from '../classes/client';
 import Components from '../classes/components';
 
 module.exports = {
@@ -24,13 +25,51 @@ module.exports = {
         )
     ),
   async execute(interaction: Discord.CommandInteraction) {
-    await interaction.deferReply({ ephemeral: true });
-    if (!interaction.isUserContextMenuCommand) return;
-    const user = interaction.options.getUser('user');
-    await user?.send({
-      embeds: [Components.embed.verification[1](user, interaction.guild)],
-      components: [Components.button.verification[1](interaction.guild?.id)],
-    });
-    await interaction.editReply('Sent!');
+    if (!interaction.options.getUser('user')?.bot === true) {
+      await interaction
+        .deferReply({ ephemeral: true })
+        .then(() => {
+          const user = interaction.options.getUser('user');
+          return user;
+        })
+        .then(user => {
+          user?.send({
+            embeds: [Components.embed.verification[1](user, interaction.guild)],
+            components: [Components.button.verification[1](interaction.guild?.id)],
+          });
+          return user;
+        })
+        .then(user =>
+          interaction.editReply({
+            embeds: [
+              Components.embed.success(
+                `Successfully sent verification application to ${user?.username}`
+              ),
+            ],
+          })
+        )
+        .finally(() => setTimeout(async () => await interaction.deleteReply(), 5000));
+    } else {
+      interaction.reply({
+        embeds: [
+          Components.embed.error(`${interaction.options.getUser('user')?.username} isn't a user!`),
+        ],
+        components: [Components.button.error(Client.errorCodes.notFound)],
+        ephemeral: true,
+      });
+    }
+    /* function postError(
+      interaction: Discord.CommandInteraction,
+      errorCode: any,
+      errorReason: string,
+      _errorDescription: string
+    ) {
+      Components.embed.error;
+      interaction.reply({
+        embeds: [Components.embed.error(errorReason)],
+        components: [Components.button.error(errorCode)],
+        ephemeral: true,
+      });
+    }*/
   },
 };

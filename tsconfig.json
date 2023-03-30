@@ -4,7 +4,7 @@
     "outDir": "./build",
     "target": "ESNext",
     "module": "CommonJS",
-    "moduleResolution": "Node",
+    "moduleResolution": "nodenext",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "importHelpers": true,
@@ -14,8 +14,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "strict": true,
-    "removeComments": true,
-    "incremental": true,
-    "tsBuildInfoFile": "build/.tsbuildinfo"
+    "removeComments": true
+    // "incremental": true,
+    // "tsBuildInfoFile": "build/.tsbuildinfo"
   }
 }
