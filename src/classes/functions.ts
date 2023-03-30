@@ -1,6 +1,6 @@
-import { client } from './client.js';
-//import Components from './components.js';
-import Logger from './logger.js';
+import { client } from './client';
+
+import Logger from './logger';
 
 export function consoleLogError(err: any) {
   new Logger('Server').error(err);

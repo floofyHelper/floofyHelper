@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import Logger from './logger.js';
+import Logger from './logger';
 
 export default class Database {
   db: PrismaClient;

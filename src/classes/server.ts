@@ -1,6 +1,6 @@
-import Client from './client.js';
-import Database from './database.js';
-import Logger from './logger.js';
+import Client from './client';
+import Database from './database';
+import Logger from './logger';
 
 export default class Server {
   clients: Client[];

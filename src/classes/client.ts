@@ -2,8 +2,7 @@ import Discord from 'discord.js';
 import fs from 'fs';
 import path from 'path';
 
-//import Components from './components.js';
-import Logger from './logger.js';
+import Logger from './logger';
 
 export let client: DiscordClient;
 
