@@ -1,7 +1,6 @@
 src/assets
-src/classes/components.ts
 src/dotenv
-src/deployCommands.ts
+**/components.*
 
 # Dev files
 .vscode/
