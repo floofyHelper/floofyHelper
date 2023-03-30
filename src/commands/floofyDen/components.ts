@@ -1,7 +1,6 @@
-//@ts-nocheck
 import Discord from 'discord.js';
 
-export default class CommandComponents {
+export default class FloofyDenCommandComponents {
   static embed = {
     rules: {
       1: new Discord.EmbedBuilder() // "Rules" image
@@ -23,14 +22,14 @@ export default class CommandComponents {
             {
               name: 'Our Staff Roles:',
               value: Discord.blockQuote(
-                Object.values(this.staffRoleIds)
+                Object.values(staffRoleIds)
                   .map(role => `<@&${role}>\n`)
                   .join('')
               ),
             },
             {
               name: "And Here's Our Current Staff!",
-              value: Discord.blockQuote(this.createStaffList(interaction)),
+              value: Discord.blockQuote(await createStaffList(interaction)),
             },
             {
               name: "We Also Follow Discord's ToS/Guidelines! <:discord:976202801992577134>",
@@ -160,29 +159,28 @@ export default class CommandComponents {
         }),
     },
   };
+}
+const floofyDenId = '975959193028788244'; // ID for Floofy Den
+const staffRoleIds = {
+  verified: '975959193028788246',
+};
 
-  static floofyDenId = '975959193028788244'; // ID for Floofy Den
-  static staffRoleIds = {
-    verified: '975959193028788246',
-  };
-
-  async createStaffList(interaction: Discord.CommandInteraction) {
-    // Puts `staffRoleIds` into a list and mentions all users that are in the list under their respective object key
-    const ownerString = `**Owner**: <@${await interaction.client.guilds
-      .fetch(this.floofyDenId)
-      .then(guild => guild.ownerId)}>`;
-    const staffList = await Promise.all(
-      Object.entries(this.staffRoleIds).map(async ([key, value]) => {
-        const role = await interaction.client.guilds.fetch(this.floofyDenId).then(async guild => {
-          await guild.members.fetch();
-          const role = await guild.roles.fetch(value);
-          return role;
-        });
-        const members = role?.members.map(member => `<@!${member.user.id}>`).join(', ');
-        const keyString = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()); // Convert camelCase to Regular Case
-        return `**${keyString}**: ${members || 'None atm'}`;
-      })
-    );
-    return `${ownerString}\n${staffList.join('\n')}`;
-  }
+async function createStaffList(interaction: Discord.CommandInteraction) {
+  // Puts `staffRoleIds` into a list and mentions all users that are in the list under their respective object key
+  const ownerString = `**Owner**: <@${await interaction.client.guilds
+    .fetch(floofyDenId)
+    .then(guild => guild.ownerId)}>`;
+  const staffList = await Promise.all(
+    Object.entries(staffRoleIds).map(async ([key, value]) => {
+      const role = await interaction.client.guilds.fetch(floofyDenId).then(async guild => {
+        await guild.members.fetch();
+        const role = await guild.roles.fetch(value);
+        return role;
+      });
+      const members = role?.members.map(member => `<@!${member.user.id}>`).join(', ');
+      const keyString = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()); // Convert camelCase to Regular Case
+      return `**${keyString}**: ${members || 'None atm'}`;
+    })
+  );
+  return `${ownerString}\n${staffList.join('\n')}`;
 }

@@ -1,7 +1,6 @@
 import Discord from 'discord.js';
 import fs from 'fs';
 import path from 'path';
-import CommandComponents from './commandComponents.js';
 
 //import Components from './components.js';
 import Logger from './logger.js';
@@ -57,36 +56,6 @@ export default class Client {
           client.on(event.name, (...args) => event.execute(...args, this));
         }
       }
-      /*// Command handling
-      client.commands = new Discord.Collection();
-      const commandsPath = path.join(__dirname, '../commands');
-      const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-      for (const file of commandFiles) {
-        const filePath = path.join(commandsPath, file);
-        const command = require(filePath);
-        client.commands.set(command.data.name, command);
-      }
-      client.on(Discord.Events.InteractionCreate, async interaction => {
-        if (!interaction.isChatInputCommand()) return;
-        const command = client.commands.get(interaction.commandName);
-        if (!command) return;
-        try {
-          await command.execute(interaction);
-        } catch (error) {
-          console.error(error);
-          if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({
-              content: 'There was an error while executing this command!',
-              ephemeral: true,
-            });
-          } else {
-            await interaction.reply({
-              content: 'There was an error while executing this command!',
-              ephemeral: true,
-            });
-          }
-        }
-      });*/
       // Command handling
       client.commands = new Discord.Collection();
       function readCommands(commandsPath: any) {
@@ -95,8 +64,12 @@ export default class Client {
           const filePath = path.join(commandsPath, file);
           if (fs.statSync(filePath).isDirectory()) {
             readCommands(filePath);
-          } else if (file.endsWith('.js')) {
+          } else if (file.endsWith('.js') && file !== 'components.js') {
             const command = require(filePath);
+            if (!command || !command.data || !command.execute) {
+              new Logger('Command Handler').error(`Invalid command file found:\n${filePath}`);
+              continue;
+            }
             client.commands.set(command.data.name, command);
           }
         }
@@ -109,8 +82,8 @@ export default class Client {
         if (!command) return;
         try {
           await command.execute(interaction);
-        } catch (error) {
-          console.error(error);
+        } catch (err) {
+          new Logger('Error').error(err);
           if (interaction.replied || interaction.deferred) {
             await interaction.followUp({
               content: 'There was an error while executing this command!',
@@ -124,35 +97,6 @@ export default class Client {
           }
         }
       });
-      /* // Deploy slash commands
-      const globalCommands = [];
-      const globalCommandsPath = path.join(__dirname, '../commands');
-      const globalCommandFiles = fs
-        .readdirSync(globalCommandsPath)
-        .filter(file => file.endsWith('.js'));
-      for (const globalCommandFile of globalCommandFiles) {
-        const globalCommand = require(`../commands/${globalCommandFile}`);
-        globalCommands.push(globalCommand.data.toJSON());
-      }
-      const rest = new Discord.REST({ version: '10' }).setToken(process.env.BOT_TOKEN!);
-      (async () => {
-        try {
-          new Logger(`${client.user?.username}`).info(
-            `Started refreshing ${globalCommands.length} global slash commands...`
-          );
-          const globalData: any = await rest.put(
-            Discord.Routes.applicationCommands(process.env.BOT_APPLICATION_ID!),
-            {
-              body: globalCommands,
-            }
-          );
-          new Logger(`${client.user?.username}`).success(
-            `Successfully reloaded ${globalData.length} global slash commands`
-          );
-        } catch (error) {
-          console.error(error);
-        }
-      })();*/
       // Deploy slash commands
       interface Command {
         name: string;
@@ -210,7 +154,7 @@ export default class Client {
               await rest.put(
                 Discord.Routes.applicationGuildCommands(
                   process.env.BOT_APPLICATION_ID!,
-                  CommandComponents.floofyDenId
+                  process.env.DEV_SERVER_ID!
                 ),
                 { body: guildCommands }
               )
@@ -221,7 +165,7 @@ export default class Client {
               await rest.put(
                 Discord.Routes.applicationGuildCommands(
                   process.env.BOT_APPLICATION_ID!,
-                  CommandComponents.floofyDenId
+                  process.env.DEV_SERVER_ID!
                 ),
                 { body: fdGuildCommands }
               )
