@@ -1,8 +1,9 @@
 import Discord from 'discord.js';
 import fs from 'fs';
 import path from 'path';
-import Components from './components.js';
+import CommandComponents from './commandComponents.js';
 
+//import Components from './components.js';
 import Logger from './logger.js';
 
 export let client: DiscordClient;
@@ -33,7 +34,97 @@ export default class Client {
     client = new DiscordClient();
     await client.login(this.token);
     client.once('ready', async () => {
-      // Deploy slash commands
+      // Event handling
+      const eventsPath = path.join(__dirname, '../events');
+      const eventFiles: string[] = [];
+      const readDir = (dir: string) => {
+        const files = fs.readdirSync(dir);
+        for (const file of files) {
+          const filePath = path.join(dir, file);
+          if (fs.statSync(filePath).isDirectory()) {
+            readDir(filePath);
+          } else if (path.extname(file) === '.js') {
+            eventFiles.push(filePath);
+          }
+        }
+      };
+      readDir(eventsPath);
+      for (const file of eventFiles) {
+        const event = require(file);
+        if (event.once) {
+          client.once(event.name, (...args) => event.execute(...args, this));
+        } else {
+          client.on(event.name, (...args) => event.execute(...args, this));
+        }
+      }
+      /*// Command handling
+      client.commands = new Discord.Collection();
+      const commandsPath = path.join(__dirname, '../commands');
+      const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+      for (const file of commandFiles) {
+        const filePath = path.join(commandsPath, file);
+        const command = require(filePath);
+        client.commands.set(command.data.name, command);
+      }
+      client.on(Discord.Events.InteractionCreate, async interaction => {
+        if (!interaction.isChatInputCommand()) return;
+        const command = client.commands.get(interaction.commandName);
+        if (!command) return;
+        try {
+          await command.execute(interaction);
+        } catch (error) {
+          console.error(error);
+          if (interaction.replied || interaction.deferred) {
+            await interaction.followUp({
+              content: 'There was an error while executing this command!',
+              ephemeral: true,
+            });
+          } else {
+            await interaction.reply({
+              content: 'There was an error while executing this command!',
+              ephemeral: true,
+            });
+          }
+        }
+      });*/
+      // Command handling
+      client.commands = new Discord.Collection();
+      function readCommands(commandsPath: any) {
+        const commandFiles = fs.readdirSync(commandsPath);
+        for (const file of commandFiles) {
+          const filePath = path.join(commandsPath, file);
+          if (fs.statSync(filePath).isDirectory()) {
+            readCommands(filePath);
+          } else if (file.endsWith('.js')) {
+            const command = require(filePath);
+            client.commands.set(command.data.name, command);
+          }
+        }
+      }
+      const commandsPath = path.join(__dirname, '../commands');
+      readCommands(commandsPath);
+      client.on(Discord.Events.InteractionCreate, async interaction => {
+        if (!interaction.isChatInputCommand()) return;
+        const command = client.commands.get(interaction.commandName);
+        if (!command) return;
+        try {
+          await command.execute(interaction);
+        } catch (error) {
+          console.error(error);
+          if (interaction.replied || interaction.deferred) {
+            await interaction.followUp({
+              content: 'There was an error while executing this command!',
+              ephemeral: true,
+            });
+          } else {
+            await interaction.reply({
+              content: 'There was an error while executing this command!',
+              ephemeral: true,
+            });
+          }
+        }
+      });
+      /* // Deploy slash commands
       const globalCommands = [];
       const globalCommandsPath = path.join(__dirname, '../commands');
       const globalCommandFiles = fs
@@ -61,63 +152,91 @@ export default class Client {
         } catch (error) {
           console.error(error);
         }
-      })();
-      // Event handling
-      const eventsPath = path.join(__dirname, '../events');
-      const eventFiles: string[] = [];
-      const readDir = (dir: string) => {
-        const files = fs.readdirSync(dir);
+      })();*/
+      // Deploy slash commands
+      interface Command {
+        name: string;
+        description: string;
+        options?: Discord.ApplicationCommandOption[];
+      }
+      //@ts-ignore
+      const clearCommands: never[] = [];
+      //@ts-ignore
+      const globalCommands: Command[] = [];
+      //@ts-ignore
+      const guildCommands: Command[] = [];
+      //@ts-ignore
+      const fdGuildCommands: Command[] = [];
+      const commandPath = path.join(__dirname, '../commands');
+      const command_Files = fs.readdirSync(commandPath);
+      const getCommandFiles = (dirPath: string, commands: string[]) => {
+        const files = fs.readdirSync(dirPath);
         for (const file of files) {
-          const filePath = path.join(dir, file);
+          const filePath = path.join(dirPath, file);
           if (fs.statSync(filePath).isDirectory()) {
-            readDir(filePath);
-          } else if (path.extname(file) === '.js') {
-            eventFiles.push(filePath);
+            getCommandFiles(filePath, commands);
+          } else {
+            const command = require(filePath);
+            if (command.data) {
+              const fileName = path.basename(file, '.js');
+              if (fileName.startsWith('_')) {
+                guildCommands.push(command.data.toJSON());
+              } else if (fileName.startsWith('fd_')) {
+                fdGuildCommands.push(command.data.toJSON());
+              } else {
+                globalCommands.push(command.data.toJSON());
+              }
+            }
           }
         }
       };
-      readDir(eventsPath);
-      for (const file of eventFiles) {
-        const event = require(file);
-        if (event.once) {
-          client.once(event.name, (...args) => event.execute(...args, this));
-        } else {
-          client.on(event.name, (...args) => event.execute(...args, this));
-        }
-      }
-      // Command handling
-      client.commands = new Discord.Collection();
-      const commandsPath = path.join(__dirname, '../commands');
-      const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-      for (const file of commandFiles) {
-        const filePath = path.join(commandsPath, file);
-        const command = require(filePath);
-        client.commands.set(command.data.name, command);
-      }
-      client.once(Discord.Events.ClientReady, () => {
-        console.log('Ready!');
-      });
-      client.on(Discord.Events.InteractionCreate, async interaction => {
-        if (!interaction.isChatInputCommand()) return;
-        const command = client.commands.get(interaction.commandName);
-        if (!command) return;
+      getCommandFiles(commandPath, command_Files);
+      const rest = new Discord.REST({ version: process.env.DISCORD_API_VERSION }).setToken(
+        process.env.BOT_TOKEN!
+      );
+      (async () => {
         try {
-          await command.execute(interaction);
-        } catch (error) {
-          console.error(error);
-          if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({
-              embeds: [Components.embed.error],
-              ephemeral: true,
-            });
-          } else {
-            await interaction.reply({
-              content: 'There was an error while executing this command!',
-              ephemeral: true,
-            });
+          new Logger(`${client.user?.username}`).info(`Started refreshing slash commands...`);
+          const promises: any[] = [];
+          if (globalCommands.length) {
+            promises.push(
+              await rest.put(Discord.Routes.applicationCommands(process.env.BOT_APPLICATION_ID!), {
+                body: globalCommands,
+              })
+            );
           }
+          if (guildCommands.length) {
+            promises.push(
+              await rest.put(
+                Discord.Routes.applicationGuildCommands(
+                  process.env.BOT_APPLICATION_ID!,
+                  CommandComponents.floofyDenId
+                ),
+                { body: guildCommands }
+              )
+            );
+          }
+          if (fdGuildCommands.length) {
+            promises.push(
+              await rest.put(
+                Discord.Routes.applicationGuildCommands(
+                  process.env.BOT_APPLICATION_ID!,
+                  CommandComponents.floofyDenId
+                ),
+                { body: fdGuildCommands }
+              )
+            );
+          }
+          const results = await Promise.all(promises);
+          new Logger(`${client.user?.username}`).success(
+            `Successfully reloaded ${results.length} set(s) of slash commands: ${
+              globalCommands.length
+            } global and ${guildCommands.length + fdGuildCommands.length} guild`
+          );
+        } catch (err) {
+          new Logger('Error').error(err);
         }
-      });
+      })();
       new Logger(`${client.user?.username}`).success(`${client.user?.tag} is logged in`);
     });
   }
