@@ -164,7 +164,7 @@ export default class Client {
               await rest.put(
                 Discord.Routes.applicationGuildCommands(
                   process.env.BOT_APPLICATION_ID!,
-                  process.env.DEV_SERVER_ID!
+                  process.env.FLOOFY_DEN_SERVER_ID!
                 ),
                 { body: fdGuildCommands }
               )
