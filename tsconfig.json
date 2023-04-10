@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./build",
+    "target": "ESNext",
+    "module": "CommonJS",
+    "moduleResolution": "nodenext",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+    "removeComments": true
+    // "incremental": true,
+    // "tsBuildInfoFile": "build/.tsbuildinfo"
+  }
+}

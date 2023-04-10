@@ -1,0 +1,83 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
+{
+  "name": "Node.js & TypeScript",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:0-18",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "znck.grammarly",
+        "esbenp.prettier-vscode",
+        "Prisma.prisma",
+        "dotenv.dotenv-vscode"
+      ],
+      "settings": {
+        "launch": {
+          "version": "0.2.0",
+          "configurations": [
+            {
+              "command": "npm start dev",
+              "name": "Run in development",
+              "request": "launch",
+              "type": "node-terminal"
+            },
+            {
+              "command": "npm start",
+              "name": "Run in production",
+              "request": "launch",
+              "type": "node-terminal"
+            }
+          ]
+        },
+        /* Discord Rich Presence Settings */
+        "vscord.status.buttons.button1.active.url": "https://github.com/floofyHelper/floofyHelper",
+        "vscord.status.buttons.button1.enabled": false,
+        "vscord.status.details.text.viewing": "In Floofy Helper {problems}",
+        "vscord.status.details.text.editing": "In Floofy Helper {problems}",
+        "vscord.status.state.text.debugging": "Debugging: Floofy Helper",
+        /* Dotenv Settings */
+        "dotenv.enableAutocloaking": true,
+        "dotenv.cloakColor": "#fdbeff",
+        /* Git Settings */
+        "git.autorefresh": true,
+        "git.alwaysSignOff": false,
+        "git.enableCommitSigning": false,
+        /* Grammarly Settings */
+        "grammarly.files.include": [
+          "**/README.md",
+          "**/*.txt",
+          "**/components.ts"
+        ],
+        "grammarly.startTextCheckInPausedState": true,
+        /* Prettier Settings */
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "singleQuote": true,
+        "useTabs": false,
+        "tabWidth": 2,
+        "printWidth": 100,
+        "arrowParens": "avoid",
+        "endOfLine": "lf"
+      }
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/prisma:2": {}
+  }
+
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [],
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "yarn install",
+
+  // Configure tool-specific properties.
+  // "customizations": {}
+
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+}
