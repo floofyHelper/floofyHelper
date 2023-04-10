@@ -1,10 +1,9 @@
+.devcontainer
 src/assets
 src/dotenv
 **/components.*
 
 # Dev files
-.vscode/
-.husky/
 package-lock.json
 
 # .env Files
