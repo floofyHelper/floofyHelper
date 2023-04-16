@@ -14,8 +14,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "strict": true,
-    "removeComments": true
-    // "incremental": true,
-    // "tsBuildInfoFile": "build/.tsbuildinfo"
+    "removeComments": true,
+    "incremental": true,
+    "tsBuildInfoFile": "build/.tsbuildinfo"
   }
 }
